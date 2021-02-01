@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,9 +20,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  double screen;
   @override
   Widget build(BuildContext context) {
+    screen = MediaQuery.of(context).size.width;
+    print('screen = $screen');
     return Scaffold(
+      backgroundColor: Color.fromRGBO(239, 133, 40, 1),
       // backgroundColor: Colors.deepOrange[400],
       body: SingleChildScrollView(
         child: Column(
@@ -38,40 +43,72 @@ class _LoginState extends State<Login> {
                     child: Text(
                       'ล็อกอิน',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.black, fontSize: 30),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold),
                     )),
               ),
             ),
             Padding(
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
               padding: EdgeInsets.symmetric(horizontal: 40),
-              child: TextField(
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(8.0)),
-                    ),
+              child: Container(
+                height: screen * 0.13,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(width: 0.0, color: Colors.white),
+                  borderRadius:
+                      const BorderRadius.all(const Radius.circular(25)),
+                ),
+                padding: const EdgeInsets.all(2),
+                child: TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.person),
+                    border: OutlineInputBorder(borderSide: BorderSide.none),
                     labelText: 'อีเมล',
-                    hintText: 'กรุณาป้อนอีเมล ตัวอย่าง abc@gmail.com'),
+                    hintText: 'กรุณาป้อนอีเมล ตัวอย่าง abc@gmail.com',
+                  ),
+                ),
               ),
+            ),
+            SizedBox(
+              height: screen * 0.09,
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 40.0, right: 40.0, top: 40, bottom: 50),
+              padding: EdgeInsets.symmetric(horizontal: 40),
               //padding: EdgeInsets.symmetric(horizontal: 15),
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'รหัสผ่าน',
-                    hintText: 'กรุณาป้อนรหัสผ่าน'),
+              child: Container(
+                height: screen * 0.13,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(width: 0.0, color: Colors.white),
+                  borderRadius:
+                      const BorderRadius.all(const Radius.circular(25)),
+                ),
+                child: TextField(
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.done,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      icon: Icon(Icons.vpn_key_sharp),
+                      border: OutlineInputBorder(borderSide: BorderSide.none),
+                      labelText: 'รหัสผ่าน',
+                      hintText: 'กรุณาป้อนรหัสผ่าน'),
+                ),
               ),
             ),
+            SizedBox(
+              height: screen * 0.09,
+            ),
             Container(
-              height: 50,
-              width: 200,
+              height: 40,
+              width: 150,
               decoration: BoxDecoration(
-                  color: Colors.blue, borderRadius: BorderRadius.circular(10)),
+                  color: Color.fromRGBO(251, 186, 110, 1),
+                  borderRadius: BorderRadius.circular(20)),
               child: FlatButton(
                 onPressed: () {
                   Navigator.push(
@@ -92,7 +129,10 @@ class _LoginState extends State<Login> {
               },
               child: Text(
                 'ลืมรหัสผ่าน',
-                style: TextStyle(color: Colors.blue, fontSize: 18),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    decoration: TextDecoration.underline),
               ),
             ),
             SizedBox(
@@ -104,7 +144,7 @@ class _LoginState extends State<Login> {
               },
               child: Text(
                 'ยังไม่มีบัญชีใช่หรือไม่? ลงทะเบียน',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
           ],
