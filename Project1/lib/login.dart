@@ -1,3 +1,4 @@
+import 'package:Project1/registerpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -26,7 +27,7 @@ class _LoginState extends State<Login> {
     screen = MediaQuery.of(context).size.width;
     print('screen = $screen');
     return Scaffold(
-      backgroundColor: Color.fromRGBO(239, 133, 40, 1),
+      backgroundColor: Color.fromRGBO(239, 113, 40, 1),
       // backgroundColor: Colors.deepOrange[400],
       body: SingleChildScrollView(
         child: Column(
@@ -59,9 +60,9 @@ class _LoginState extends State<Login> {
                   color: Colors.white,
                   border: Border.all(width: 0.0, color: Colors.white),
                   borderRadius:
-                      const BorderRadius.all(const Radius.circular(25)),
+                      const BorderRadius.all(const Radius.circular(15)),
                 ),
-                padding: const EdgeInsets.all(2),
+                padding: const EdgeInsets.only(left: 3, top: 3),
                 child: TextField(
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
@@ -86,8 +87,9 @@ class _LoginState extends State<Login> {
                   color: Colors.white,
                   border: Border.all(width: 0.0, color: Colors.white),
                   borderRadius:
-                      const BorderRadius.all(const Radius.circular(25)),
+                      const BorderRadius.all(const Radius.circular(15)),
                 ),
+                padding: const EdgeInsets.only(left: 3, top: 3),
                 child: TextField(
                   keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.done,
@@ -140,6 +142,8 @@ class _LoginState extends State<Login> {
             ),
             FlatButton(
               onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Register()));
                 //TODO FORGOT PASSWORD SCREEN GOES HERE
               },
               child: Text(

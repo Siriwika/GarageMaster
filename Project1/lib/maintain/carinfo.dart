@@ -9,10 +9,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: CarInfo(),
-      theme: ThemeData(fontFamily: 'Prompt'),
-    );
+        debugShowCheckedModeBanner: false,
+        title: "Garage Master",
+        home: CarInfo(),
+        theme: ThemeData(fontFamily: 'Prompt'));
   }
 }
 

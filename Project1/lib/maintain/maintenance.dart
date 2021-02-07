@@ -1,7 +1,8 @@
 import 'package:Project1/maintain/maintenance2.dart';
 import 'package:flutter/material.dart';
-
+// ignore: must_be_immutable
 class Maintenance extends StatelessWidget {
+  double screen;
   Maintenance({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -10,98 +11,104 @@ class Maintenance extends StatelessWidget {
   Widget build(BuildContext context) {
     final urlImage =
         'https://img.etimg.com/thumb/msid-73268134,width-640,resizemode-4,imgsize-35417/surprise-heard-of-a-sony-car.jpg';
-
+    screen = MediaQuery.of(context).size.width;
+    print('screen = $screen');
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.orange,
-        ),
+        backgroundColor: Color.fromRGBO(239, 113, 40, 1),
         body: SafeArea(
+            child: Expanded(
+          child: SingleChildScrollView(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-              Image.network(
-                urlImage,
-                height: 100,
-                width: 200,
-                fit: BoxFit.cover,
-              ),
-              Center(
-                child: Container(
-                    margin: EdgeInsets.all(5),
-                    padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
+                  SizedBox(
+                    height: screen * 0.02,
+                  ),
+                  Image.network(
+                    urlImage,
+                    height: screen * 0.3,
+                    width: screen * 0.5,
+                    fit: BoxFit.cover,
+                  ),
+                  Center(
+                    child: Container(
+                        margin: EdgeInsets.all(5),
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        alignment: Alignment.center,
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                'ยี่ห้อรถ',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                'Mazda2',
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        )),
+                  ),
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        child: FlatButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Maintenance2()));
+                          },
                           child: Text(
-                            'ยี่ห้อรถ',
-                            textAlign: TextAlign.center,
+                            'อัพเดท',
                             style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
+                                color: Colors.orange,
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
                           ),
                         ),
-                        Expanded(
-                          child: Text(
-                            'Mazda2',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                                color: Colors.green,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    )),
-              ),
-              Column(
-                children: <Widget>[
+                      )
+                    ],
+                  ),
                   Container(
-                    child: FlatButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Maintenance2()));
-                      },
-                      child: Text(
-                        'อัพเดท',
-                        style: TextStyle(
-                            color: Colors.orange,
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Container(
-                  child: Center(
-                child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Colors.orange[100]),
-                    margin: EdgeInsets.all(20),
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        buildTextFieldEmail(),
-                        buildTextFieldEngine(),
-                        buildTextFieldBattery(),
-                        buildTextFieldCoolant(),
-                        buildTextFieldFuel(),
-                        buildTextFieldAir(),
-                        buildTextFieldPower(),
-                        // buildButtonSignIn(context),
-                      ],
-                    )),
-              ))
-            ])));
+                      child: Center(
+                    child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: Colors.orange[100]),
+                        margin: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            buildTextFieldEmail(),
+                            buildTextFieldEngine(),
+                            buildTextFieldBattery(),
+                            buildTextFieldCoolant(),
+                            buildTextFieldFuel(),
+                            buildTextFieldAir(),
+                            buildTextFieldPower(),
+                            // buildButtonSignIn(context),
+                          ],
+                        )),
+                  ))
+                ]),
+          ),
+        )));
   }
 
   // Widget buildButtonSignIn(BuildContext context) {
