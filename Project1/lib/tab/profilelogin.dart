@@ -1,28 +1,33 @@
-import 'package:Project1/addgarage/mygarage.dart';
-import 'package:Project1/maintain/carinfo.dart';
 import 'package:flutter/material.dart';
+import 'package:project1/addgarage/mygarage.dart';
+import 'package:project1/login.dart';
 
-void main() {
-  runApp(ProfilePage());
+// ignore: camel_case_types
+class profileLoginpage extends StatefulWidget {
+  @override
+  _profileLoginpageState createState() => _profileLoginpageState();
 }
 
-class ProfilePage extends StatelessWidget {
+// ignore: camel_case_types
+class _profileLoginpageState extends State<profileLoginpage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Profile(),
+      home: profileLogin(),
       theme: ThemeData(fontFamily: 'Prompt'),
     );
   }
 }
 
-class Profile extends StatefulWidget {
+// ignore: camel_case_types
+class profileLogin extends StatefulWidget {
   @override
-  _ProfileState createState() => _ProfileState();
+  _profileLoginState createState() => _profileLoginState();
 }
 
-class _ProfileState extends State<Profile> {
+// ignore: camel_case_types
+class _profileLoginState extends State<profileLogin> {
   double screen;
   @override
   Widget build(BuildContext context) {
@@ -58,17 +63,7 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                       SizedBox(
-                        height: 2,
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(20),
-                        child: Text(
-                          'Malya jerner',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        height: screen * 0.15,
                       ),
                       Container(
                         child: Container(
@@ -96,20 +91,9 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                       ),
-                      Container(
-                          child: Center(
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: Color.fromRGBO(196, 196, 196, 1)),
-                                  margin: EdgeInsets.all(20),
-                                  child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        buildButtonCradle(),
-                                      ])))),
+                      SizedBox(
+                        height: screen * 0.1,
+                      ),
                       Container(
                           alignment: Alignment.center,
                           child: Column(
@@ -118,15 +102,18 @@ class _ProfileState extends State<Profile> {
                                 width: screen * 0.9,
                                 height: screen * 0.15,
                                 child: RaisedButton(
-                                  color: Color.fromRGBO(196, 196, 196, 1),
+                                  color: Color.fromRGBO(251, 186, 110, 1),
                                   onPressed: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => CarInfo()));
+                                            builder: (context) => Login()));
                                   },
-                                  child: Icon(Icons.add,
-                                      size: 40, color: Colors.white),
+                                  child: Text(
+                                    'ล็อกอิน',
+                                    style: TextStyle(
+                                        fontSize: 25, color: Colors.white),
+                                  ),
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(15.0)),
@@ -140,28 +127,4 @@ class _ProfileState extends State<Profile> {
           ],
         )));
   }
-}
-
-Widget buildButtonCradle() {
-  return Container(
-      child: Row(
-    children: <Widget>[
-      Expanded(
-        child: Image.network(
-          'https://www.thairath.co.th/media/B6FtNKtgSqRqbnNsU0Udl3NPkoFFyfqDYbyT1l69T43VQFr6D2i58jSv4VPoHprRZUSKS.jpg',
-          width: 200,
-          height: 60,
-          alignment: Alignment.centerLeft,
-        ),
-      ),
-      Expanded(
-        child: Text(
-          'Mazda3',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      ),
-    ],
-  ));
 }
