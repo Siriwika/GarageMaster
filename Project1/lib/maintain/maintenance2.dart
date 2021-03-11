@@ -1,80 +1,93 @@
 import 'package:flutter/material.dart';
 
+void main() {
+  runApp(Maintenance2());
+}
+
+// ignore: must_be_immutable
 class Maintenance2 extends StatelessWidget {
+  double screen;
   @override
   Widget build(BuildContext context) {
+    screen = MediaQuery.of(context).size.width;
+    print('screen = $screen');
     final urlImage =
         'https://img.etimg.com/thumb/msid-73268134,width-640,resizemode-4,imgsize-35417/surprise-heard-of-a-sony-car.jpg';
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.orange,
-        ),
+        backgroundColor: Color.fromRGBO(239, 113, 40, 1),
         body: SafeArea(
+            child: Expanded(
+          child: SingleChildScrollView(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-              Image.network(
-                urlImage,
-                height: 100,
-                width: 200,
-                fit: BoxFit.cover,
-              ),
-              Center(
-                child: Container(
-                    margin: EdgeInsets.all(5),
-                    padding: EdgeInsets.fromLTRB(70, 20, 100, 0),
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            'ยี่ห้อรถ',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            'Mazda2',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    )),
-              ),
-              Container(
-                  child: Center(
-                child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Colors.orange[100]),
-                    margin: EdgeInsets.all(20),
-                    padding: EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        buildTextFieldEmail(),
-                        buildTextFieldEngine(),
-                        buildTextFieldBattery(),
-                        buildTextFieldCoolant(),
-                        buildTextFieldFuel(),
-                        buildTextFieldAir(),
-                        buildTextFieldPower(),
-                        buildButtonSignIn(context),
-                      ],
-                    )),
-              ))
-            ])));
+                  SizedBox(
+                    height: screen * 0.02,
+                  ),
+                  Image.network(
+                    urlImage,
+                    height: 100,
+                    width: 200,
+                    fit: BoxFit.cover,
+                  ),
+                  Center(
+                    child: Container(
+                        margin: EdgeInsets.all(5),
+                        padding: EdgeInsets.fromLTRB(70, 20, 100, 0),
+                        alignment: Alignment.center,
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                'ยี่ห้อรถ',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                'Mazda2',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        )),
+                  ),
+                  Container(
+                      child: Center(
+                    child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: Colors.orange[100]),
+                        margin: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            buildTextFieldEmail(),
+                            buildTextFieldEngine(),
+                            buildTextFieldBattery(),
+                            buildTextFieldCoolant(),
+                            buildTextFieldFuel(),
+                            buildTextFieldAir(),
+                            buildTextFieldPower(),
+                            buildButtonSignIn(context),
+                          ],
+                        )),
+                  ))
+                ]),
+          ),
+        )));
   }
 
   Widget buildButtonSignIn(BuildContext context) {
