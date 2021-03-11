@@ -1,10 +1,8 @@
-import 'package:Project1/type/typestyle.dart';
+import 'package:project1/type/typestyle.dart';
 import 'package:flutter/material.dart';
 import 'motercycleservice.dart';
 
-void main() {
-  runApp(Servicetype());
-}
+
 
 class Servicetype extends StatelessWidget {
   @override

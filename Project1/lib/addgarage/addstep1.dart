@@ -1,9 +1,5 @@
-import 'package:Project1/addgarage/addstep2.dart';
+import 'package:project1/addgarage/addstep2.dart';
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(Garagestep1());
-}
 
 class Garagestep1 extends StatelessWidget {
   @override
