@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(Maintenance2());
-}
 
 // ignore: must_be_immutable
 class Maintenance2 extends StatelessWidget {

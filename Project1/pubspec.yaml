@@ -1,4 +1,4 @@
-name: Project1
+name: project1
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -14,12 +14,19 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   google_maps_flutter: ^1.0.6
   location: 2.3.5
+
+
+  http: ^0.12.0
+  firebase_core: ^0.5.0
+  firebase_auth: ^0.18.0+1
+  google_sign_in: ^4.5.3
+  provider: ^4.3.3
+
 
 dev_dependencies:
   flutter_test:

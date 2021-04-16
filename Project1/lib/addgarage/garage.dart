@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(GaragePage());
-}
 
 class GaragePage extends StatelessWidget {
   @override

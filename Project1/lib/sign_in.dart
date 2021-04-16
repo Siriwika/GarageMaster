@@ -26,7 +26,7 @@ Future<String> signInWithGoogle() async {
     assert(await user.getIdToken() != null);
 
     final User currentUser = _auth.currentUser;
-    assert(user.uid == currentUser.uid);
+    assert(user == currentUser);
 
     print('signInWithGoogle succeeded: $user');
 

@@ -1,4 +1,4 @@
-import 'package:Project1/maintain/maintenance2.dart';
+import 'package:project1/maintain/maintenance2.dart';
 import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class Maintenance extends StatelessWidget {

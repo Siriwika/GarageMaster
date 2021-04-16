@@ -1,10 +1,18 @@
 import 'dart:async';
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:project1/Models/TestModel.dart';
+import 'package:project1/addgarage/garage.dart';
+
+class Mappage extends StatefulWidget {
+  @override
+  _MappageState createState() => _MappageState();
+}
 
 class Map extends StatelessWidget {
   @override
@@ -12,95 +20,23 @@ class Map extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Mappage(),
-        theme: ThemeData(fontFamily: 'Prompt'));
+        theme: ThemeData(fontFamily: 'Prompt')
+        );
   }
-}
-class Mappage extends StatefulWidget {
-  @override
-  _MappageState createState() => _MappageState();
 }
 
 class _MappageState extends State<Mappage> {
-  Completer<GoogleMapController> _controller = Completer();
+  Future<List<GarageModel>> futureGarage;
+  List<GarageModel> markervalue;
+  Set<Marker> markers= HashSet<Marker>();
+  List<Marker> allMarkers = [];
+  GoogleMapController _controller;
+  bool isMapCreated = false;
   LocationData currentLocation;
   static final CameraPosition bangkok = CameraPosition(
-    target: LatLng(13.7674109, 100.5288173),
+    target: LatLng(13.8600204, 100.5408732),
     zoom: 14.0 - 2.0,
   );
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: GoogleMap(
-        mapType: MapType.normal,
-        myLocationEnabled: true,
-        initialCameraPosition: bangkok,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        markers: {
-          Marker(
-            markerId: MarkerId("1"),
-            position: LatLng(13.9230668, 100.4942573),
-            infoWindow: InfoWindow(
-                title: "อู่ซ่อมสีรถยนต์ วิทูร เซอร์วิส",
-                snippet: "บริการเคาะตัวถังรถยนต์"),
-          ),
-          Marker(
-            markerId: MarkerId("2"),
-            position: LatLng(13.9073195, 100.5138999),
-            infoWindow: InfoWindow(
-                title: "อู่ซ่อมรถแจ้งวัฒนะ 23",
-                snippet: "ซ่อมรถยนต์และบำรุงรักษา"),
-          ),
-          Marker(
-            markerId: MarkerId("3"),
-            position: LatLng(13.9085084, 100.5135734),
-            infoWindow: InfoWindow(
-                title: "อู่ Christ Auto Shop", snippet: "ร้านซ่อมรถยนต์"),
-          ),
-          Marker(
-            markerId: MarkerId("4"),
-            position: LatLng(13.909561, 100.5142254),
-            infoWindow: InfoWindow(
-                title: "อู่ฮวดเจริญการช่าง โดยนายกิมใช้ แซ่ตั้ง",
-                snippet: "ร้านซ่อมรถยนต์"),
-          ),
-          Marker(
-            markerId: MarkerId("5"),
-            position: LatLng(13.9336663, 100.5057297),
-            infoWindow: InfoWindow(
-                title: "อู่ถวิลเจริญยนต์", snippet: "ซ่อมรถยนต์และบำรุงรักษา"),
-          ),
-          Marker(
-            markerId: MarkerId("6"),
-            position: LatLng(13.9317934, 100.5051276),
-            infoWindow: InfoWindow(
-                title: "ห้างหุ้นส่วนจำกัด อู่คงเดชเจริญยนต์",
-                snippet: "ร้านซ่อมรถยนต์"),
-          ),
-          Marker(
-            markerId: MarkerId("7"),
-            position: LatLng(13.9297737, 100.5059654),
-            infoWindow: InfoWindow(
-                title: "อู่ช่างโจ้ เซอร์วิส",
-                snippet: "ซ่อมรถยนต์และบำรุงรักษา"),
-          ),
-          Marker(
-            markerId: MarkerId("8"),
-            position: LatLng(13.9263459, 100.51539),
-            infoWindow:
-                InfoWindow(title: "อู่เบนซ์ ช่างรา", snippet: "บริการรถยนต์"),
-          ),
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToMe,
-        label: Text('ตำแหน่งของฉัน'),
-        icon: Icon(Icons.near_me),
-      ),
-    );
-  }
 
   Future<LocationData> getCurrentLocation() async {
     Location location = Location();
@@ -114,12 +50,76 @@ class _MappageState extends State<Mappage> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    futureGarage = fetchGarageDetail();
+    //_setMarkerIcon();
+  }
+
+  void _onMapCreated(GoogleMapController controller) async {
+    //call api
+    //map json
+    _controller = controller;
+
+    setState(() {
+      for (int i = 0; i < markervalue.length; i++) {
+        markers.add(
+          Marker(
+              markerId: MarkerId(markervalue[i].gId.toString()),
+              position: LatLng(markervalue[i].gLatitude, markervalue[i].gLongitude),
+              infoWindow: InfoWindow(
+                  title: markervalue[i].gName,
+                  snippet: markervalue[i].gDescription),
+                  onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => GaragePage()));
+                  }
+            ),
+        );
+      }
+    });
+  }
+
   Future _goToMe() async {
-    final GoogleMapController controller = await _controller.future;
+    final GoogleMapController controller = await _controller;
     currentLocation = await getCurrentLocation();
     controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
       target: LatLng(currentLocation.latitude, currentLocation.longitude),
       zoom: 16.0 - 2.0,
     )));
+  }
+
+  Future<String> getJsonFile(String path) async {
+    return await rootBundle.loadString(path);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: FutureBuilder<List<GarageModel>>(     
+          future: futureGarage,
+          builder: (context, marker) {
+            if (marker.hasData) {
+              markervalue = marker.data;
+              return GoogleMap(
+                  mapType: MapType.normal,
+                  myLocationEnabled: true,
+                  initialCameraPosition: bangkok,
+                  onMapCreated: _onMapCreated,
+                  markers: markers);
+            } else if (marker.hasError) {
+              return Text(marker.error);
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _goToMe,
+        label: Text('ตำแหน่งของฉัน'),
+        icon: Icon(Icons.near_me),
+      ),
+    );
   }
 }

@@ -1,15 +1,39 @@
-import 'package:Project1/registerpage.dart';
+import 'package:project1/registerpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:project1/resetpassword/reset1.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:project1/sign_in.dart';
+import 'package:project1/tab/profile.dart';
 
-void main() => runApp(MyApp());
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Login(),
+      home: FutureBuilder(
+          future: _fbApp,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print('You have an error! ${snapshot.error.toString()}');
+              return Text('Something went wrong!');
+            } else if (snapshot.hasData) {
+              return Login();
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
       theme: ThemeData(fontFamily: 'Prompt', backgroundColor: Colors.black),
     );
   }
@@ -113,8 +137,17 @@ class _LoginState extends State<Login> {
                   borderRadius: BorderRadius.circular(20)),
               child: FlatButton(
                 onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => Login()));
+                  signInWithGoogle().then((result) {
+                    if (result != null) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ProfilePage();
+                          },
+                        ),
+                      );
+                    }
+                  });
                 },
                 child: Text(
                   'ล็อกอิน',
@@ -127,7 +160,8 @@ class _LoginState extends State<Login> {
             ),
             FlatButton(
               onPressed: () {
-                //TODO FORGOT PASSWORD SCREEN GOES HERE
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => resetpassword1()));
               },
               child: Text(
                 'ลืมรหัสผ่าน',
@@ -144,7 +178,6 @@ class _LoginState extends State<Login> {
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Register()));
-                //TODO FORGOT PASSWORD SCREEN GOES HERE
               },
               child: Text(
                 'ยังไม่มีบัญชีใช่หรือไม่? ลงทะเบียน',
