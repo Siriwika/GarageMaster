@@ -46,6 +46,7 @@ class GarageModel {
     dynamic fileImage;
     double km;
 
+
     factory GarageModel.fromJson(Map<String, dynamic> json) => GarageModel(
         gId: json["g_Id"] == null ? null : json["g_Id"],
         gImage: json["g_Image"] == null ? null : json["g_Image"],
@@ -62,6 +63,7 @@ class GarageModel {
         uId: json["uId"] == null ? null : json["uId"],
         sId: json["sId"] == null ? null : json["sId"],
         fileImage: json["fileImage"],
+
     );
 
     Map<String, dynamic> toJson() => {
@@ -93,6 +95,53 @@ Future<List<GarageModel>> fetchGarageDetail() async {
         l.map((g) => GarageModel.fromJson(g)).toList();
 
     return garageModels;
+  } else {
+    throw Exception('Failed to load Marker');
+  }
+}
+
+List<ServiceModel> serviceModelFromJson(String str) => List<ServiceModel>.from(json.decode(str).map((x) => ServiceModel.fromJson(x)));
+
+String serviceModelToJson(List<ServiceModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+class ServiceModel {
+   ServiceModel({
+        this.gId,
+        this.sId,
+        this.sname,
+        this.typecarid,
+    });
+
+    int gId; 
+    int sId;
+    String sname;
+    int typecarid;
+
+
+    factory ServiceModel.fromJson(Map<String, dynamic> json) => ServiceModel(
+        gId: json["g_Id"] == null ? null : json["g_Id"],
+        sId: json["sId"] == null ? null : json["sId"],
+        sname: json["sName"] == null ? null : json["sName"],
+        typecarid: json["TC_Id"] == null ? null : json["TC_Id"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "g_Id": gId == null ? null : gId,
+        "sId": sId == null ? null : sId,
+        "sName": sname == null ? null : sname,
+        "TC_Id": typecarid == null ? null : typecarid,
+    };
+}
+
+Future<List<ServiceModel>> fetchGarageservice(int gid) async {
+  final response =
+      await http.get('http://139.59.229.66:5002/api/Garage/GetServicebyGarage?G_Id={$gid}');
+
+  if (response.statusCode == 200) {
+    Iterable l = json.decode(response.body);
+    List<ServiceModel> service =
+        l.map((g) => ServiceModel.fromJson(g)).toList();
+
+    return service;
   } else {
     throw Exception('Failed to load Marker');
   }

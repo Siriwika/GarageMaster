@@ -1,5 +1,8 @@
+import 'dart:html';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:project1/Models/TestModel.dart';
+import 'package:project1/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -21,6 +24,10 @@ class GaragePage extends StatelessWidget {
 }
 
 class _GarageState extends State<Garage> {
+
+  Future<List<ServiceModel>> futureservice;
+  List<ServiceModel> garagevalues;
+  Set<Row> garage = Set<Row>();
   
   Future<void> _makePhoneCall(String url) async {
     if (await canLaunch(url)) {
@@ -30,16 +37,28 @@ class _GarageState extends State<Garage> {
     }
   }
 
-  double screen;
+  @override
+  void initState() { 
+    super.initState();
+    futureservice = fetchGarageservice(gid);
+  }
+  
+
+  String format(double n) {
+  return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2);
+  }
+
+    Future<String> getJsonFile(String path) async {
+    return await rootBundle.loadString(path);
+  }
+
+double screen;
   int charge;
   String call;
   TimeOfDay opentime;
   TimeOfDay closetime;
   String distkm;
-
-  String format(double n) {
-  return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2);
-  }
+  int gid;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +68,7 @@ class _GarageState extends State<Garage> {
     opentime = TimeOfDay.fromDateTime(DateTime.parse((widget.garageModels.gOpenTime).toString())); 
     closetime = TimeOfDay.fromDateTime(DateTime.parse((widget.garageModels.gCloseTime).toString())); 
     distkm = format(widget.garageModels.km);
+    gid = widget.garageModels.gId;
 
     print('screen = $screen');
     return Scaffold(
@@ -88,15 +108,19 @@ class _GarageState extends State<Garage> {
                           style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
                         Text(
-                          'เวลาเปิดให้บริการ ตั้งแต่: ${opentime.hour}:${opentime.minute} - ${closetime.hour}:${closetime.minute}น.',
-                          style: TextStyle(color: Colors.black, fontSize: 18),
+                          'เวลาเปิดให้บริการ',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
+                        ),
+                        Text(
+                          'ตั้งแต่: ${opentime.hour}:${opentime.minute}{$opentime.} - ${closetime.hour}:${closetime.minute} น.',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
                         Text(
                           'ค่าบริการเริ่มต้น $charge บาท',
-                          style: TextStyle(color: Colors.black, fontSize: 18),
+                          style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
                         Text('$distkm กม.',
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ],
                     ),
@@ -158,7 +182,7 @@ class _GarageState extends State<Garage> {
                 SizedBox(
                   height: screen * 0.02,
                 ),
-                Container(
+                  Container(
                   padding: EdgeInsets.all(10),
                   color: Color.fromRGBO(252, 207, 153, 1),
                   child: Column(
@@ -168,9 +192,12 @@ class _GarageState extends State<Garage> {
                         'บริการ',
                         style: TextStyle(color: Colors.black, fontSize: 18),
                       ),
+
+                      for (int i = 0; i < garagevalues.length; i++) {
+                        garage.add(
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                        children: getList()[
                           Row(
                             children: [
                               Icon(
@@ -178,73 +205,42 @@ class _GarageState extends State<Garage> {
                                 color: Colors.green,
                                 size: 30,
                               ),
-                              Text(
-                                'เครื่องยนต์',
+                              Text(garagevalues[i].sname,
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 18),
                               ),
                             ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.done,
-                                color: Colors.green,
-                                size: 30,
-                              ),
-                              Text(
-                                'แบตเตอรี่',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ],
+                          )]
+                         
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.done,
-                                color: Colors.green,
-                                size: 30,
-                              ),
-                              Text(
-                                'ช่วงล่าง',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
                           ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.done,
-                                color: Colors.green,
-                                size: 30,
-                              ),
-                              Text(
-                                'แก๊สรถยนต์',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ]
+
                       ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: screen * 0.02,
-                ),
-              ],
-            ),
-          ))
-        ],
-      )),
-    );
+            )))
+          },
+        ),
+            ))
+      )
+    )
   }
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: FutureBuilder<List<ServiceModel>>(
+          future: futureservice,
+          builder: (context, value) {
+            if (value.hasData) {
+             garagevalues = value.data;
+              return Container(
+                  garage: garage);
+            } else if (value.hasError) {
+              return Text(value.error);
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
+        )
+          ;
 }
