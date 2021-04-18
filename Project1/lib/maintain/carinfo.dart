@@ -240,26 +240,26 @@ class _CarInfoState extends State<CarInfo> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Container(
-                        margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
-                        height: screen * 0.125,
-                        width: screen * 0.4,
-                        child: RaisedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Maintenance()));
-                          },
-                          color: Color.fromRGBO(37, 134, 41, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            'ยืนยัน',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        )),
+                    // Container(
+                    //     margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                    //     height: screen * 0.125,
+                    //     width: screen * 0.4,
+                    //     child: RaisedButton(
+                    //       onPressed: () {
+                    //         Navigator.push(
+                    //             context,
+                    //             MaterialPageRoute(
+                    //                 builder: (context) => Maintenance()));
+                    //       },
+                    //       color: Color.fromRGBO(37, 134, 41, 1),
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(20),
+                    //       ),
+                    //       child: Text(
+                    //         'ยืนยัน',
+                    //         style: TextStyle(color: Colors.white, fontSize: 18),
+                    //       ),
+                    //     )),
                   ],
                 ),
                 SizedBox(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 
 
-class Garage extends StatelessWidget {
+class Garage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

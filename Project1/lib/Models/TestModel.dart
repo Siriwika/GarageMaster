@@ -26,6 +26,8 @@ class GarageModel {
         this.uId,
         this.sId,
         this.fileImage,
+        this.km,
+
     });
 
     int gId;
@@ -33,9 +35,9 @@ class GarageModel {
     String gName;
     String gDescription;
     String gPhone;
-    DateTime gDate;
+    DateTime gDate; //แก้ type เป็น string
     dynamic time;
-    Map<String, double> gOpenTime;
+    Map<String, double> gOpenTime; //แก้ type เป็น DateTime
     double gLatitude;
     double gLongitude;
     int gCharge;
@@ -43,6 +45,7 @@ class GarageModel {
     int uId;
     int sId;
     dynamic fileImage;
+    double km;
 
     factory GarageModel.fromJson(Map<String, dynamic> json) => GarageModel(
         gId: json["g_Id"] == null ? null : json["g_Id"],

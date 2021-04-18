@@ -1,21 +1,59 @@
+import 'package:flutter/services.dart';
+import 'package:project1/maintain/carinfo.dart';
 import 'package:project1/maintain/maintenance2.dart';
 import 'package:flutter/material.dart';
-// ignore: must_be_immutable
-class Maintenance extends StatelessWidget {
-  double screen;
-  Maintenance({Key key, this.title}) : super(key: key);
+import 'package:project1/Models/carModel.dart';
 
-  final String title;
+
+void main() {
+  runApp(Maintenance());
+}
+// ignore: must_be_immutable
+class Maintenance extends StatefulWidget {
+  @override
+  _MaintenanceState createState() => _MaintenanceState();
+}
+
+
+class Maintain extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "Carinfo",
+        theme: ThemeData(fontFamily: 'Prompt'));
+  }
+}
+
+
+class _MaintenanceState extends State<Maintenance> {
+
+Future<List<Carinfo>> futureCar;
+List<Carinfo> value;
+  double screen;
+  
+  @override
+  void initState() {
+    super.initState();
+    futureCar = fetchCarinfo();
+  }
+
+    Future<String> getJsonFile(String path) async {
+    return await rootBundle.loadString(path);
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    final urlImage =
-        'https://img.etimg.com/thumb/msid-73268134,width-640,resizemode-4,imgsize-35417/surprise-heard-of-a-sony-car.jpg';
     screen = MediaQuery.of(context).size.width;
     print('screen = $screen');
     return Scaffold(
-        backgroundColor: Color.fromRGBO(239, 113, 40, 1),
-        body: SafeArea(
+       backgroundColor: Color.fromRGBO(239, 113, 40, 1),
+       body:FutureBuilder(
+         future: futureCar,
+         builder: (BuildContext context , AsyncSnapshot<dynamic> snapshot){
+      if(snapshot.connectionState == ConnectionState.done){
+            var result = snapshot.data;
+          return SafeArea(
             child: Expanded(
           child: SingleChildScrollView(
             child: Column(
@@ -26,7 +64,7 @@ class Maintenance extends StatelessWidget {
                     height: screen * 0.02,
                   ),
                   Image.network(
-                    urlImage,
+                    ,
                     height: screen * 0.3,
                     width: screen * 0.5,
                     fit: BoxFit.cover,
@@ -37,7 +75,7 @@ class Maintenance extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                         alignment: Alignment.center,
                         child: Row(
-                          children: <Widget>[
+                          children: <Widget>[ 
                             Expanded(
                               child: Text(
                                 'ยี่ห้อรถ',
@@ -50,7 +88,7 @@ class Maintenance extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                'Mazda2',
+                                value.cBrand,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                     color: Colors.green,
@@ -109,8 +147,13 @@ class Maintenance extends StatelessWidget {
                 ]),
           ),
         )));
+          }
+          return LinearProgressIndicator();
+         },
+         )
+         );
   }
-
+      
   // Widget buildButtonSignIn(BuildContext context) {
   //   return Column(
   //     crossAxisAlignment: CrossAxisAlignment.center,
@@ -162,7 +205,7 @@ class Maintenance extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                'อีก 2 เดือน',
+                widget.carinfo.cEngine.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -192,7 +235,7 @@ class Maintenance extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                'ควรได้รับการซ่อมบำรุง',
+                widget.carinfo.cBattery.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.red,
@@ -222,7 +265,7 @@ class Maintenance extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                'อีก 2 เดือน',
+                widget.carinfo.cCoolant.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -252,7 +295,7 @@ class Maintenance extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                'อีก 2 เดือน',
+                widget.carinfo.cFuel.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -282,7 +325,7 @@ class Maintenance extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                'อีก 2 เดือน',
+                widget.carinfo.cAirConditioning.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -312,7 +355,67 @@ class Maintenance extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                'อีก 2 เดือน',
+                widget.carinfo.cPowerTrain.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Container buildTextFieldTires() {
+    return Container(
+        margin: EdgeInsets.all(5),
+        alignment: Alignment.center,
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                'วันที่ตรวจเช็คยางรถยนต์',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                widget.carinfo.cTires.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ));
+  }
+
+Container buildTextFieldSteering() {
+    return Container(
+        margin: EdgeInsets.all(5),
+        alignment: Alignment.center,
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                'วันที่ตรวจเช็คยางรถยนต์',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                widget.carinfo.cSteering.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -324,3 +427,6 @@ class Maintenance extends StatelessWidget {
         ));
   }
 }
+
+
+

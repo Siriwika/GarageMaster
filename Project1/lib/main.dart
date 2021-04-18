@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:project1/type/carservice.dart';
 import 'package:project1/tab/mappage.dart';
 import 'package:project1/tab/profile.dart';
@@ -44,7 +43,7 @@ class HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext conmaptext) {
+  Widget build(BuildContext context) {
     // ignore: unused_element
     return Scaffold(
       body: Center(child: tabs.elementAt(_selectedTab)),

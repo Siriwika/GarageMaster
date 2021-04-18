@@ -1,27 +1,53 @@
 import 'package:flutter/material.dart';
-
-
-class GaragePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "Garage Master",
-        home: Garage(),
-        theme: ThemeData(fontFamily: 'Prompt'));
-  }
-}
+import 'package:project1/Models/TestModel.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/cupertino.dart';
 
 class Garage extends StatefulWidget {
+  final GarageModel garageModels;
+  Garage(this.garageModels);
+
   @override
   _GarageState createState() => _GarageState();
 }
 
+class GaragePage extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "Garage Master",
+        theme: ThemeData(fontFamily: 'Prompt'));
+  }
+}
+
 class _GarageState extends State<Garage> {
+  
+  Future<void> _makePhoneCall(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   double screen;
+  int charge;
+  String call;
+  String opentime;
+  String distkm;
+
+  String format(double n) {
+  return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2);
+  }
+
   @override
   Widget build(BuildContext context) {
+    charge = widget.garageModels.gCharge;
     screen = MediaQuery.of(context).size.width;
+    call = widget.garageModels.gPhone;
+    opentime = widget.garageModels.gOpenTime.toString();
+    distkm = format(widget.garageModels.km);
+
     print('screen = $screen');
     return Scaffold(
       backgroundColor: Color.fromRGBO(251, 186, 110, 1),
@@ -38,8 +64,7 @@ class _GarageState extends State<Garage> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: NetworkImage(
-                            'https://www.iamcar.net/wp-content/uploads/2017/07/%E0%B8%97%E0%B8%A3%E0%B8%B1%E0%B8%9E%E0%B8%A2%E0%B9%8C%E0%B8%A3%E0%B8%B8%E0%B9%88%E0%B8%87%E0%B9%80%E0%B8%A3%E0%B8%B7%E0%B8%AD%E0%B8%87%E0%B8%A2%E0%B8%B2%E0%B8%87%E0%B8%A2%E0%B8%99%E0%B8%95%E0%B9%8C.jpg')),
+                        image: NetworkImage(widget.garageModels.gImage)),
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
                 ),
@@ -53,23 +78,22 @@ class _GarageState extends State<Garage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'เปิด 10:00 - 18:00 น.',
+                          widget.garageModels.gName,
                           style: TextStyle(color: Colors.green, fontSize: 20),
                         ),
                         Text(
-                          'ร้านทรัพย์รุ่งเรือง',
+                          widget.garageModels.gDescription,
                           style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
                         Text(
-                          'ค่าบริการเริ่มต้น 500 บาท',
+                          'เวลาเปิดให้บริการ $opentime',
                           style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
                         Text(
-                          'ไปหาถึงที่ได้',
-                          style: TextStyle(color: Colors.green, fontSize: 18),
+                          'ค่าบริการเริ่มต้น $charge บาท',
+                          style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
-                        Text(
-                          '1.7 ก.ม.',
+                        Text('$distkm กม.',
                           style: TextStyle(color: Colors.grey, fontSize: 16),
                         ),
                       ],
@@ -81,7 +105,11 @@ class _GarageState extends State<Garage> {
                           left: 40,
                         ),
                         child: RaisedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              _makePhoneCall('tel: $call');
+                            });
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -111,30 +139,14 @@ class _GarageState extends State<Garage> {
                       width: screen * 0.02,
                     ),
                     Container(
-                      width: screen * 0.2,
+                      width: screen * 0.4,
                       height: screen * 0.1,
                       decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(10)),
                       child: Center(
                         child: Text(
-                          'มีรถยก',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: screen * 0.02,
-                    ),
-                    Container(
-                      width: screen * 0.2,
-                      height: screen * 0.1,
-                      decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Text(
-                          'มีรถยก',
+                          widget.garageModels.gServiceType,
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                       ),
@@ -226,8 +238,6 @@ class _GarageState extends State<Garage> {
                 SizedBox(
                   height: screen * 0.02,
                 ),
-                Text(
-                    'ร้านทรัพย์รุ่งเรือง มีบริการซ่อม ตรวจเช็ครถยนต์  เปิดให้บริการทุกวัน ราคาคุยกันได้ครับ')
               ],
             ),
           ))
