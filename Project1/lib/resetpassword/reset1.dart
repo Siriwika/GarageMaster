@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'reset2.dart';
 
 void main() {
   runApp(resetpassword1());

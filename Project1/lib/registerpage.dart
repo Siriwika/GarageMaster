@@ -1,7 +1,9 @@
 import 'dart:ui';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
+import 'package:project1/%E0%B8%B5%E0%B8%B5utility/dialog.dart';
+import 'package:project1/main.dart';
 
 class RegisterPage extends StatelessWidget {
   @override
@@ -21,6 +23,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   double screen;
+  String email, name, password1;
   @override
   Widget build(BuildContext context) {
     screen = MediaQuery.of(context).size.width;
@@ -58,6 +61,7 @@ class _RegisterState extends State<Register> {
                       padding: const EdgeInsets.only(left: 6, top: 18),
                       child: Center(
                         child: TextField(
+                          onChanged: (value) => email = value.trim(),
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.done,
                           decoration: textborderside('excemple@gmail.com'),
@@ -80,6 +84,7 @@ class _RegisterState extends State<Register> {
                             padding: const EdgeInsets.only(left: 6, top: 18),
                             child: Center(
                               child: TextField(
+                                onChanged: (value) => name = value.trim(),
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
                                 decoration: textborderside('ชื่อ'),
@@ -91,7 +96,7 @@ class _RegisterState extends State<Register> {
                       SizedBox(
                         width: screen * 0.04,
                       ),
-                      SizedBox(
+                      /* SizedBox(
                         width: screen * 0.4,
                         child: Container(
                           height: screen * 0.13,
@@ -107,7 +112,7 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                         ),
-                      )
+                      )*/
                     ],
                   ),
                   SizedBox(
@@ -125,6 +130,7 @@ class _RegisterState extends State<Register> {
                           padding: const EdgeInsets.only(left: 6, top: 18),
                           child: Center(
                             child: TextField(
+                              onChanged: (value) => password1 = value.trim(),
                               keyboardType: TextInputType.text,
                               textInputAction: TextInputAction.next,
                               decoration: textborderside(''),
@@ -135,10 +141,10 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                   Align(
-                    child: Text(
-                        'ใช้อักขระ 8 ตัวขึ้นไปที่มีทั้งตัวอักษร ตัวเลข และสัญลักษณ์ผสมกัน'),
+                    alignment: Alignment.centerLeft,
+                    child: Text('ใช้อักขระไม่ต่ำกว่า 6 ตัวอักษร'),
                   ),
-                  text('ยืนยันรหัสผ่าน'),
+                  /* text('ยืนยันรหัสผ่าน'),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: SizedBox(
@@ -150,6 +156,14 @@ class _RegisterState extends State<Register> {
                           padding: const EdgeInsets.only(left: 6, top: 18),
                           child: Center(
                             child: TextField(
+                              onChanged: (value) {
+                                password2 = value.trim();
+                                if (password1 == password2) {
+                                  cfpassword = password1;
+                                } else {
+                                  text('รหัสไม่ตรงกัน');
+                                }
+                              },
                               keyboardType: TextInputType.text,
                               textInputAction: TextInputAction.done,
                               decoration: textborderside(''),
@@ -158,7 +172,7 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                     ),
-                  ),
+                  ),*/
                   SizedBox(
                     height: screen * 0.08,
                   ),
@@ -173,7 +187,20 @@ class _RegisterState extends State<Register> {
                             fontSize: 18,
                             color: Colors.white,
                           )),
-                      onPressed: () {},
+                      onPressed: () {
+                        print(
+                            'email = $email, name = $name, password = $password1');
+                        if ((email?.isEmpty ?? true) ||
+                            (name?.isEmpty ?? true) ||
+                            (password1?.isEmpty ?? true)) {
+                          // print('Have Space');
+                          normalDialog(context, 'Have Space ?',
+                              'Please Fill Every Blank');
+                        } else {
+                          createAccountAndInsertInformation();
+                          HomePage();
+                        }
+                      },
                     )),
                   )
                 ],
@@ -183,6 +210,23 @@ class _RegisterState extends State<Register> {
         ],
       )),
     );
+  }
+
+  Future<Null> createAccountAndInsertInformation() async {
+    await Firebase.initializeApp().then((value) async {
+      // print('### Firebase Initialize Success ##  ==> $name, ==> $password1');
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password1)
+          .then((value) async {
+        // print('Create Account Success');
+        await value.user.updateProfile(displayName: name).then((value2) {
+          // สามารถเรียกค่าอีเมลจากfirebaseมาเช็คได้ ด้านล่างจะเป็นเรียกไอดีของfirebase
+          String uid = value.user.uid;
+          print('Update Profile Succes and uid = $uid');
+        });
+      }).catchError((onError) =>
+              normalDialog(context, onError.code, onError.message));
+    });
   }
 
   Align text(String data) {
@@ -206,5 +250,21 @@ class _RegisterState extends State<Register> {
     return InputDecoration(
         hintText: hint,
         border: OutlineInputBorder(borderSide: BorderSide.none));
+  }
+
+  Future<Null> registerFierbase() async {
+    await Firebase.initializeApp().then((value) async {
+      print('###### Firebase Success #####');
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password1)
+          .then((value) async {
+        print('Register Succes');
+        await value.user.updateProfile(displayName: name).then((value) =>
+            Navigator.pushNamedAndRemoveUntil(
+                context, 'myService', (route) => false));
+      }).catchError((value) {
+        normalDialog((context), value.code, value.message);
+      });
+    });
   }
 }
