@@ -33,7 +33,8 @@ class _GarageState extends State<Garage> {
   double screen;
   int charge;
   String call;
-  String opentime;
+  TimeOfDay opentime;
+  TimeOfDay closetime;
   String distkm;
 
   String format(double n) {
@@ -45,7 +46,8 @@ class _GarageState extends State<Garage> {
     charge = widget.garageModels.gCharge;
     screen = MediaQuery.of(context).size.width;
     call = widget.garageModels.gPhone;
-    opentime = widget.garageModels.gOpenTime.toString();
+    opentime = TimeOfDay.fromDateTime(DateTime.parse((widget.garageModels.gOpenTime).toString())); 
+    closetime = TimeOfDay.fromDateTime(DateTime.parse((widget.garageModels.gCloseTime).toString())); 
     distkm = format(widget.garageModels.km);
 
     print('screen = $screen');
@@ -86,7 +88,7 @@ class _GarageState extends State<Garage> {
                           style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
                         Text(
-                          'เวลาเปิดให้บริการ $opentime',
+                          'เวลาเปิดให้บริการ ตั้งแต่: ${opentime.hour}:${opentime.minute} - ${closetime.hour}:${closetime.minute}น.',
                           style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
                         Text(
