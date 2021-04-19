@@ -1,5 +1,5 @@
-import 'package:project1/addgarage/mygarage.dart';
-import 'package:project1/maintain/carinfo.dart';
+import 'package:Project1/addgarage/mygarage.dart';
+import 'package:Project1/maintain/carinfo.dart';
 import 'package:flutter/material.dart';
 
 
@@ -130,10 +130,10 @@ class _ProfileState extends State<Profile> {
                                 ),
                               )
                             ],
-                          ))
+                          )),
                     ]),
+                    ),
               ),
-            ),
           ],
         )));
   }
