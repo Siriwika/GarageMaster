@@ -1,48 +1,89 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(GaragePage());
-}
-
-class GaragePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "Garage Master",
-        home: Garage(),
-        theme: ThemeData(fontFamily: 'Prompt'));
-  }
-}
+import 'package:flutter/services.dart';
+import 'package:project1/Models/TestModel.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/cupertino.dart';
 
 class Garage extends StatefulWidget {
+  final GarageModel garageModels;
+  Garage(this.garageModels);
+
   @override
   _GarageState createState() => _GarageState();
 }
 
+class GaragePage extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "Garage Master",
+        theme: ThemeData(fontFamily: 'Prompt'));
+  }
+}
+
 class _GarageState extends State<Garage> {
+  // Future<List<ServiceModel>> futureservice;
+  // List<ServiceModel> garagevalues;
+
+  Future<void> _makePhoneCall(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   futureservice = fetchGarageservice(gid);
+  // }
+
+  String format(double n) {
+    return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2);
+  }
+
+  Future<String> getJsonFile(String path) async {
+    return await rootBundle.loadString(path);
+  }
+
   double screen;
+  int charge;
+  String call;
+  TimeOfDay opentime;
+  TimeOfDay closetime;
+  String distkm;
+  int gid;
+
+   String service;
+
   @override
   Widget build(BuildContext context) {
+    charge = widget.garageModels.gCharge;
     screen = MediaQuery.of(context).size.width;
+    call = widget.garageModels.gPhone;
+    opentime = TimeOfDay.fromDateTime(
+        DateTime.parse((widget.garageModels.gOpenTime).toString()));
+    closetime = TimeOfDay.fromDateTime(
+        DateTime.parse((widget.garageModels.gCloseTime).toString()));
+    distkm = format(widget.garageModels.km);
+    gid = widget.garageModels.gId;
+
     print('screen = $screen');
-    return Scaffold(
+    return new Scaffold(
       backgroundColor: Color.fromRGBO(251, 186, 110, 1),
       body: SafeArea(
-          child: Column(
-        children: [
-          Expanded(
-              child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
+          child: Column(children: [
+        Expanded(
+          child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(children: [
                 Container(
                   height: screen * 0.55,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: NetworkImage(
-                            'https://www.iamcar.net/wp-content/uploads/2017/07/%E0%B8%97%E0%B8%A3%E0%B8%B1%E0%B8%9E%E0%B8%A2%E0%B9%8C%E0%B8%A3%E0%B8%B8%E0%B9%88%E0%B8%87%E0%B9%80%E0%B8%A3%E0%B8%B7%E0%B8%AD%E0%B8%87%E0%B8%A2%E0%B8%B2%E0%B8%87%E0%B8%A2%E0%B8%99%E0%B8%95%E0%B9%8C.jpg')),
+                        image: NetworkImage(widget.garageModels.gImage)),
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
                 ),
@@ -56,24 +97,28 @@ class _GarageState extends State<Garage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'เปิด 10:00 - 18:00 น.',
+                          widget.garageModels.gName,
                           style: TextStyle(color: Colors.green, fontSize: 20),
                         ),
                         Text(
-                          'ร้านทรัพย์รุ่งเรือง',
+                          widget.garageModels.gDescription,
                           style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
                         Text(
-                          'ค่าบริการเริ่มต้น 500 บาท',
-                          style: TextStyle(color: Colors.black, fontSize: 18),
+                          'เวลาเปิดให้บริการ',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
                         Text(
-                          'ไปหาถึงที่ได้',
-                          style: TextStyle(color: Colors.green, fontSize: 18),
+                          'ตั้งแต่: ${opentime.hour}:${opentime.minute} ถึง ${closetime.hour}:${closetime.minute} น.',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
                         Text(
-                          '1.7 ก.ม.',
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          'ค่าบริการเริ่มต้น $charge บาท',
+                          style: TextStyle(color: Colors.black, fontSize: 16),
+                        ),
+                        Text(
+                          '$distkm กม.',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ],
                     ),
@@ -84,7 +129,11 @@ class _GarageState extends State<Garage> {
                           left: 40,
                         ),
                         child: RaisedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              _makePhoneCall('tel: $call');
+                            });
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -114,30 +163,14 @@ class _GarageState extends State<Garage> {
                       width: screen * 0.02,
                     ),
                     Container(
-                      width: screen * 0.2,
+                      width: screen * 0.4,
                       height: screen * 0.1,
                       decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(10)),
                       child: Center(
                         child: Text(
-                          'มีรถยก',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: screen * 0.02,
-                    ),
-                    Container(
-                      width: screen * 0.2,
-                      height: screen * 0.1,
-                      decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Text(
-                          'มีรถยก',
+                          widget.garageModels.gServiceType,
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                       ),
@@ -147,95 +180,57 @@ class _GarageState extends State<Garage> {
                 SizedBox(
                   height: screen * 0.02,
                 ),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  color: Color.fromRGBO(252, 207, 153, 1),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'บริการ',
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.done,
-                                color: Colors.green,
-                                size: 30,
-                              ),
-                              Text(
-                                'เครื่องยนต์',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.done,
-                                color: Colors.green,
-                                size: 30,
-                              ),
-                              Text(
-                                'แบตเตอรี่',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.done,
-                                color: Colors.green,
-                                size: 30,
-                              ),
-                              Text(
-                                'ช่วงล่าง',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.done,
-                                color: Colors.green,
-                                size: 30,
-                              ),
-                              Text(
-                                'แก๊สรถยนต์',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: screen * 0.02,
-                ),
-                Text(
-                    'ร้านทรัพย์รุ่งเรือง มีบริการซ่อม ตรวจเช็ครถยนต์  เปิดให้บริการทุกวัน ราคาคุยกันได้ครับ')
-              ],
-            ),
-          ))
-        ],
+                // Container(
+                //   padding: EdgeInsets.all(10),
+                //   color: Color.fromRGBO(252, 207, 153, 1),
+                //   child: FutureBuilder<List<ServiceModel>>(
+                //       future: futureservice,
+                //       builder: (context, snapshot) {
+                //         if (snapshot.hasError) {
+                //           print(snapshot.error);
+                //         } else if (snapshot.hasData) {
+                //           garagevalues = snapshot.data;
+                //         }
+                //         return Center(child: CircularProgressIndicator());
+                //       }),
+                // ),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Row(
+                //       children: [
+                //         Text(
+                //           'บริการ',
+                //           style: TextStyle(color: Colors.black, fontSize: 18),
+                //         ),
+                //       ],
+                //     ),
+                //     Column(                  
+                //       children: [
+                //           ListView.builder(
+                //            padding: const EdgeInsets.all(8),
+                //           itemCount: garagevalues.length,
+                //              itemBuilder: (context, i) {
+                //                if(garagevalues[i].gId==widget.garageModels.gId){
+                //                   service = garagevalues[i].sname;
+                //                }
+                //                return Container(
+                //                child :  Text('$service',
+                //                 style: TextStyle(
+                //                     color: Colors.black, fontSize: 18),
+                //               )
+                //                );
+                //              }
+                //           ),
+                //       ]
+                //         )
+                //       ],
+                //     )
+                  ],
+                )
+              )),
+        ]
       )),
     );
-  }
-}
+    }
+    }

@@ -1,6 +1,6 @@
-import 'package:Project1/type/carservice.dart';
-import 'package:Project1/widget/mappage.dart';
-import 'package:Project1/widget/profile.dart';
+import 'package:project1/type/carservice.dart';
+import 'package:project1/widget/mappage.dart';
+import 'package:project1/widget/profile.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyMap());

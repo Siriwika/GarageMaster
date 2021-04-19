@@ -1,7 +1,8 @@
 import 'package:project1/addgarage/mygarage.dart';
+import 'package:project1/login.dart';
 import 'package:project1/maintain/carinfo.dart';
 import 'package:flutter/material.dart';
-
+import 'package:project1/sign_in.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -21,6 +22,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   double screen;
+
   @override
   Widget build(BuildContext context) {
     screen = MediaQuery.of(context).size.width;
@@ -130,35 +132,63 @@ class _ProfileState extends State<Profile> {
                                 ),
                               )
                             ],
-                          ))
+                          )),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Center(
+                        child: Container(
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                  height: 40,
+                                  width: screen * 0.5,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromRGBO(251, 186, 110, 1),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: RaisedButton(
+                                    onPressed: _signOutGoogle,
+                                    child: Text('Sign Out'),
+                                    color: Color.fromRGBO(252, 207, 153, 1),
+                                  ))
+                            ],
+                          ),
+                        ),
+                      ),
                     ]),
               ),
             ),
           ],
         )));
   }
-}
 
-Widget buildButtonCradle() {
-  return Container(
-      child: Row(
-    children: <Widget>[
-      Expanded(
-        child: Image.network(
-          'https://www.thairath.co.th/media/B6FtNKtgSqRqbnNsU0Udl3NPkoFFyfqDYbyT1l69T43VQFr6D2i58jSv4VPoHprRZUSKS.jpg',
-          width: 200,
-          height: 60,
-          alignment: Alignment.centerLeft,
+  Future<void> _signOutGoogle() async {
+    await googleSignIn.signOut();
+    print("User Signed Out");
+    runApp(MyApp1());
+  }
+
+  Widget buildButtonCradle() {
+    return Container(
+        child: Row(
+      children: <Widget>[
+        Expanded(
+          child: Image.network(
+            'https://www.thairath.co.th/media/B6FtNKtgSqRqbnNsU0Udl3NPkoFFyfqDYbyT1l69T43VQFr6D2i58jSv4VPoHprRZUSKS.jpg',
+            width: 200,
+            height: 60,
+            alignment: Alignment.centerLeft,
+          ),
         ),
-      ),
-      Expanded(
-        child: Text(
-          'Mazda3',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+        Expanded(
+          child: Text(
+            'Mazda3',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-    ],
-  ));
+      ],
+    ));
+  }
 }

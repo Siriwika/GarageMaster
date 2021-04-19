@@ -1,10 +1,11 @@
+// ignore: unused_import
 import 'package:firebase_core/firebase_core.dart';
 import 'package:project1/type/carservice.dart';
 import 'package:project1/tab/mappage.dart';
 import 'package:project1/tab/profile.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+main() {
   runApp(MyMap());
 }
 
