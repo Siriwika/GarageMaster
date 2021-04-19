@@ -23,3 +23,18 @@ class UserModel {
         "UFullName": name,
       };
 }
+
+Future<List<UserModel>> fetchuser() async {
+  final response =
+      await http.post('http://139.59.229.66:5002/api/Account/AddUser');
+
+  if (response.statusCode == 200) {
+    Iterable l = json.decode(response.body);
+    List<UserModel> userModels =
+        l.map((g) => UserModel.fromJson(g)).toList();
+
+    return userModels;
+  } else {
+    throw Exception('Failed to load Marker');
+  }
+}

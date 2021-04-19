@@ -1,8 +1,6 @@
-import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project1/Models/TestModel.dart';
-import 'package:project1/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -24,11 +22,9 @@ class GaragePage extends StatelessWidget {
 }
 
 class _GarageState extends State<Garage> {
+  // Future<List<ServiceModel>> futureservice;
+  // List<ServiceModel> garagevalues;
 
-  Future<List<ServiceModel>> futureservice;
-  List<ServiceModel> garagevalues;
-  Set<Row> garage = Set<Row>();
-  
   Future<void> _makePhoneCall(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -37,22 +33,21 @@ class _GarageState extends State<Garage> {
     }
   }
 
-  @override
-  void initState() { 
-    super.initState();
-    futureservice = fetchGarageservice(gid);
-  }
-  
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   futureservice = fetchGarageservice(gid);
+  // }
 
   String format(double n) {
-  return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2);
+    return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2);
   }
 
-    Future<String> getJsonFile(String path) async {
+  Future<String> getJsonFile(String path) async {
     return await rootBundle.loadString(path);
   }
 
-double screen;
+  double screen;
   int charge;
   String call;
   TimeOfDay opentime;
@@ -60,27 +55,29 @@ double screen;
   String distkm;
   int gid;
 
+   String service;
+
   @override
   Widget build(BuildContext context) {
     charge = widget.garageModels.gCharge;
     screen = MediaQuery.of(context).size.width;
     call = widget.garageModels.gPhone;
-    opentime = TimeOfDay.fromDateTime(DateTime.parse((widget.garageModels.gOpenTime).toString())); 
-    closetime = TimeOfDay.fromDateTime(DateTime.parse((widget.garageModels.gCloseTime).toString())); 
+    opentime = TimeOfDay.fromDateTime(
+        DateTime.parse((widget.garageModels.gOpenTime).toString()));
+    closetime = TimeOfDay.fromDateTime(
+        DateTime.parse((widget.garageModels.gCloseTime).toString()));
     distkm = format(widget.garageModels.km);
     gid = widget.garageModels.gId;
 
     print('screen = $screen');
-    return Scaffold(
+    return new Scaffold(
       backgroundColor: Color.fromRGBO(251, 186, 110, 1),
       body: SafeArea(
-          child: Column(
-        children: [
-          Expanded(
-              child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
+          child: Column(children: [
+        Expanded(
+          child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(children: [
                 Container(
                   height: screen * 0.55,
                   decoration: BoxDecoration(
@@ -112,14 +109,15 @@ double screen;
                           style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
                         Text(
-                          'ตั้งแต่: ${opentime.hour}:${opentime.minute}{$opentime.} - ${closetime.hour}:${closetime.minute} น.',
+                          'ตั้งแต่: ${opentime.hour}:${opentime.minute} ถึง ${closetime.hour}:${closetime.minute} น.',
                           style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
                         Text(
                           'ค่าบริการเริ่มต้น $charge บาท',
                           style: TextStyle(color: Colors.black, fontSize: 16),
                         ),
-                        Text('$distkm กม.',
+                        Text(
+                          '$distkm กม.',
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ],
@@ -182,65 +180,57 @@ double screen;
                 SizedBox(
                   height: screen * 0.02,
                 ),
-                  Container(
-                  padding: EdgeInsets.all(10),
-                  color: Color.fromRGBO(252, 207, 153, 1),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'บริการ',
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                      ),
-
-                      for (int i = 0; i < garagevalues.length; i++) {
-                        garage.add(
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: getList()[
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.done,
-                                color: Colors.green,
-                                size: 30,
-                              ),
-                              Text(garagevalues[i].sname,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          )]
-                         
-                      ),
-                          ),
-                        ]
-
-                      ),
-            )))
-          },
-        ),
-            ))
-      )
-    )
-  }
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      body: FutureBuilder<List<ServiceModel>>(
-          future: futureservice,
-          builder: (context, value) {
-            if (value.hasData) {
-             garagevalues = value.data;
-              return Container(
-                  garage: garage);
-            } else if (value.hasError) {
-              return Text(value.error);
-            }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }),
-        )
-          ;
-}
+                // Container(
+                //   padding: EdgeInsets.all(10),
+                //   color: Color.fromRGBO(252, 207, 153, 1),
+                //   child: FutureBuilder<List<ServiceModel>>(
+                //       future: futureservice,
+                //       builder: (context, snapshot) {
+                //         if (snapshot.hasError) {
+                //           print(snapshot.error);
+                //         } else if (snapshot.hasData) {
+                //           garagevalues = snapshot.data;
+                //         }
+                //         return Center(child: CircularProgressIndicator());
+                //       }),
+                // ),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Row(
+                //       children: [
+                //         Text(
+                //           'บริการ',
+                //           style: TextStyle(color: Colors.black, fontSize: 18),
+                //         ),
+                //       ],
+                //     ),
+                //     Column(                  
+                //       children: [
+                //           ListView.builder(
+                //            padding: const EdgeInsets.all(8),
+                //           itemCount: garagevalues.length,
+                //              itemBuilder: (context, i) {
+                //                if(garagevalues[i].gId==widget.garageModels.gId){
+                //                   service = garagevalues[i].sname;
+                //                }
+                //                return Container(
+                //                child :  Text('$service',
+                //                 style: TextStyle(
+                //                     color: Colors.black, fontSize: 18),
+                //               )
+                //                );
+                //              }
+                //           ),
+                //       ]
+                //         )
+                //       ],
+                //     )
+                  ],
+                )
+              )),
+        ]
+      )),
+    );
+    }
+    }

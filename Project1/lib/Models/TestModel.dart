@@ -132,9 +132,11 @@ class ServiceModel {
     };
 }
 
+final String url = 'http://139.59.229.66:5002/api/Garage/GetServicebyGarage?g_Id=';
+
 Future<List<ServiceModel>> fetchGarageservice(int gid) async {
   final response =
-      await http.get('http://139.59.229.66:5002/api/Garage/GetServicebyGarage?G_Id={$gid}');
+      await http.get(url+gid.toString());
 
   if (response.statusCode == 200) {
     Iterable l = json.decode(response.body);
