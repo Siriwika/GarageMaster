@@ -4,15 +4,15 @@ import 'package:project1/Models/TestModel.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 
-class Garage extends StatefulWidget {
+class Garage2 extends StatefulWidget {
   final GarageModel garageModels;
-  Garage(this.garageModels);
+  Garage2(this.garageModels);
 
   @override
-  _GarageState createState() => _GarageState();
+  _Garage2State createState() => _Garage2State();
 }
 
-class GaragePage extends StatelessWidget {
+class GaragePage2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -21,7 +21,7 @@ class GaragePage extends StatelessWidget {
   }
 }
 
-class _GarageState extends State<Garage> {
+class _Garage2State extends State<Garage2> {
   Future<List<ServiceModel>> futureservice;
   List<ServiceModel> values;
 
@@ -42,9 +42,9 @@ class _GarageState extends State<Garage> {
     }
   }
 
-  String format(double n) {
-    return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2);
-  }
+  // String format(double n) {
+  //   return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2);
+  // }
 
   Future<String> getJsonFile(String path) async {
     return await rootBundle.loadString(path);
@@ -68,7 +68,7 @@ class _GarageState extends State<Garage> {
         DateTime.parse((widget.garageModels.gOpenTime).toString()));
     closetime = TimeOfDay.fromDateTime(
         DateTime.parse((widget.garageModels.gCloseTime).toString()));
-    distkm = format(widget.garageModels.km);
+    // distkm = format(widget.garageModels.km);
     gid = widget.garageModels.gId;
     setState(() {
       _getservice(gid);
@@ -119,10 +119,6 @@ class _GarageState extends State<Garage> {
                     Text(
                       'ค่าบริการเริ่มต้น $charge บาท',
                       style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                    Text(
-                      '$distkm กม.',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ],
                 ),

@@ -14,14 +14,14 @@ class MyMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
         //home: HomePage(),
         theme: ThemeData(fontFamily: 'Prompt'));
   }
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
+  final int uid;
+  HomePage(this.uid);
   @override
   State<HomePage> createState() => HomePageState();
 }

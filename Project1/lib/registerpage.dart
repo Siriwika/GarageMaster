@@ -2,28 +2,41 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:project1/Models/userModels.dart';
 import 'package:project1/main.dart';
 import 'package:project1/utility/dialog.dart';
+import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Register(),
+      home: Register(
+        email: '',
+      ),
       theme: ThemeData(fontFamily: 'Prompt'),
     );
   }
 }
 
+// ignore: must_be_immutable
 class Register extends StatefulWidget {
+  String email;
+  String name;
+  Register({Key key, @required this.email}) : super(key: key);
+
   @override
   _RegisterState createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
+  UserModel _user;
+  UserModel user;
   double screen;
-  String email, name, password1;
+  String name;
+  String email;
+  String password1;
   @override
   Widget build(BuildContext context) {
     screen = MediaQuery.of(context).size.width;
@@ -60,12 +73,15 @@ class _RegisterState extends State<Register> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 6, top: 18),
                       child: Center(
-                        child: TextField(
-                          onChanged: (value) => email = value.trim(),
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.done,
-                          decoration: textborderside('excemple@gmail.com'),
-                        ),
+                        child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(widget.email)),
+                        // TextField(
+                        //   onChanged: (value) => email = value.trim(),
+                        //   keyboardType: TextInputType.emailAddress,
+                        //   textInputAction: TextInputAction.done,
+                        //   decoration: textborderside('excemple@gmail.com'),
+                        // ),
                       ),
                     ),
                   ),
@@ -84,7 +100,8 @@ class _RegisterState extends State<Register> {
                             padding: const EdgeInsets.only(left: 6, top: 18),
                             child: Center(
                               child: TextField(
-                                onChanged: (value) => name = value.trim(),
+                                onChanged: (value) =>
+                                    name = value.trim().toString(),
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
                                 decoration: textborderside('ชื่อ'),
@@ -115,35 +132,36 @@ class _RegisterState extends State<Register> {
                       )*/
                     ],
                   ),
-                  SizedBox(
-                    height: screen * 0.05,
-                  ),
-                  text('รหัสผ่าน'),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: SizedBox(
-                      width: screen * 0.7,
-                      child: Container(
-                        height: screen * 0.13,
-                        decoration: bgInput(),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 6, top: 18),
-                          child: Center(
-                            child: TextField(
-                              onChanged: (value) => password1 = value.trim(),
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              decoration: textborderside(''),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('ใช้อักขระไม่ต่ำกว่า 6 ตัวอักษร'),
-                  ),
+                  // SizedBox(
+                  //   height: screen * 0.05,
+                  // ),
+                  // text('รหัสผ่าน'),
+                  // Align(
+                  //   alignment: Alignment.centerLeft,
+                  //   child: SizedBox(
+                  //     width: screen * 0.7,
+                  //     child: Container(
+                  //       height: screen * 0.13,
+                  //       decoration: bgInput(),
+                  //       child: Padding(
+                  //         padding: const EdgeInsets.only(left: 6, top: 18),
+                  //         child: Center(
+                  //           child: TextField(
+                  //             onChanged: (value) => password1 = value.trim(),
+                  //             keyboardType: TextInputType.text,
+                  //             textInputAction: TextInputAction.next,
+                  //             decoration: textborderside(''),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Align(
+                  //   alignment: Alignment.centerLeft,
+                  //   child: Text('ใช้อักขระไม่ต่ำกว่า 6 ตัวอักษร'),
+                  // ),
+
                   /* text('ยืนยันรหัสผ่าน'),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -187,18 +205,25 @@ class _RegisterState extends State<Register> {
                             fontSize: 18,
                             color: Colors.white,
                           )),
-                      onPressed: () {
+                      onPressed: () async {
                         print(
-                            'email = $email, name = $name, password = $password1');
-                        if ((email?.isEmpty ?? true) ||
-                            (name?.isEmpty ?? true) ||
-                            (password1?.isEmpty ?? true)) {
+                            'email = email, name = $name, password = $password1');
+                        if ((name?.isEmpty ?? true)) {
                           // print('Have Space');
                           normalDialog(context, 'Have Space ?',
                               'Please Fill Every Blank');
                         } else {
-                          createAccountAndInsertInformation();
-                          HomePage();
+                          password1 = "123456789";
+                          password1.trim().toString();
+                          //createAccountAndInsertInformation();
+                          print(widget.email);
+                          print(name);
+                          user = await createUser(name, widget.email);
+                          setState(() {
+                            _user = user;
+                          });
+                          print(_user.uid);
+                          HomePage(uid: _user.uid);
                         }
                       },
                     )),
@@ -216,17 +241,31 @@ class _RegisterState extends State<Register> {
     await Firebase.initializeApp().then((value) async {
       // print('### Firebase Initialize Success ##  ==> $name, ==> $password1');
       await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password1)
+          .createUserWithEmailAndPassword(email: widget.email, password: null)
           .then((value) async {
         // print('Create Account Success');
         await value.user.updateProfile(displayName: name).then((value2) {
           // สามารถเรียกค่าอีเมลจากfirebaseมาเช็คได้ ด้านล่างจะเป็นเรียกไอดีของfirebase
-          String uid = value.user.uid;
-          print('Update Profile Succes and uid = $uid');
+          // String uid = value.user.uid;
+          // print('Update Profile Succes and uid = $uid');
         });
       }).catchError((onError) =>
               normalDialog(context, onError.code, onError.message));
     });
+  }
+
+  Future<UserModel> createUser(String fName, String email) async {
+    final String apiUrl = "http://139.59.229.66:5002/api/Account/AddUser";
+    final response = await http.post(apiUrl,
+        body: {"uFullName": fName, "u_Email": email},
+        headers: {'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate, br'});
+    if (response.statusCode == 201) {
+      final String responseString = response.body;
+      print(responseString);
+      return userModelFromjson(responseString);
+    } else {
+      return null;
+    }
   }
 
   Align text(String data) {
@@ -256,7 +295,8 @@ class _RegisterState extends State<Register> {
     await Firebase.initializeApp().then((value) async {
       print('###### Firebase Success #####');
       await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password1)
+          .createUserWithEmailAndPassword(
+              email: widget.email, password: password1)
           .then((value) async {
         print('Register Succes');
         await value.user.updateProfile(displayName: name).then((value) =>

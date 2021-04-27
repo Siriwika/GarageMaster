@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:project1/main.dart';
+import 'package:project1/Models/userModels.dart';
 import 'package:project1/registerpage.dart';
 import 'package:project1/resetpassword/reset1.dart';
-import 'package:project1/utility/dialog.dart';
+import 'package:http/http.dart' as http;
+
+import 'main.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,14 +45,38 @@ class MyApp1 extends StatelessWidget {
   }
 }
 
+/*Future<UserModel> creatUser(String name, String email) async {
+  final String apiUrl = " ";
+  final response = await http.post(apiUrl, body: {
+    "U_Email": email,
+    "UFullName": name,
+  });
+}*/
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
+// ignore: missing_return
+Future<UserModel> createUser(String email, String name) async {
+  final String apiUrl = "http://139.59.229.66:5002/api/Account/AddUser";
+  final response =
+      await http.post(apiUrl, body: {"U_Email": email, "UfullName": name});
+  if (response.statusCode == 201) {
+    final String responseString = response.body;
+    return userModelFromjson(responseString);
+  }
+}
+
 class _LoginState extends State<Login> {
+  List<UserModel> user;
+  List<UserModel> userModels;
+  List<UserModel> userchack = [];
+  String email;
   double screen;
-  String email, password;
+  String email1, password;
+  List<UserModel> _user;
   @override
   Widget build(BuildContext context) {
     screen = MediaQuery.of(context).size.width;
@@ -78,7 +106,7 @@ class _LoginState extends State<Login> {
                     )),
               ),
             ),
-            emailuser(),
+            /*  emailuser(),
             SizedBox(
               height: screen * 0.09,
             ),
@@ -100,7 +128,7 @@ class _LoginState extends State<Login> {
                     normalDialog(
                         context, 'Have Space ?', 'Please Fill Every Blank');
                   } else {}
-                  /*signInWithGoogle().then((result) {
+                  signInWithGoogle().then((result) {
                     if (result != null) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -110,14 +138,14 @@ class _LoginState extends State<Login> {
                         ),
                       );
                     }
-                  });*/
+                  });
                 },
                 child: Text(
                   'ล็อกอิน',
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
-            ),
+            ),*/
             googlelogin(context),
             SizedBox(
               height: 50,
@@ -126,25 +154,26 @@ class _LoginState extends State<Login> {
             SizedBox(
               height: 50,
             ),*/
-            userregister(context),
+            // userregister(context),
           ],
         ),
       ),
     );
   }
 
-  FlatButton userregister(BuildContext context) {
-    return FlatButton(
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Register()));
-      },
-      child: Text(
-        'ยังไม่มีบัญชีใช่หรือไม่? ลงทะเบียน',
-        style: TextStyle(color: Colors.white, fontSize: 18),
-      ),
-    );
-  }
+  // FlatButton userregister(BuildContext context) {
+  //   return FlatButton(
+  //     onPressed: () {
+  //       Navigator.push(
+  //           context, MaterialPageRoute(builder: (context) => Register()));
+  //      
+  //     },
+  //     child: Text(
+  //       'ยังไม่มีบัญชีใช่หรือไม่? ลงทะเบียน',
+  //       style: TextStyle(color: Colors.white, fontSize: 18),
+  //     ),
+  //   );
+  // }
 
   FlatButton resetpw(BuildContext context) {
     return FlatButton(
@@ -202,7 +231,7 @@ class _LoginState extends State<Login> {
         ),
         padding: const EdgeInsets.only(left: 3, top: 3),
         child: TextField(
-          onChanged: (value) => email = value.trim(),
+          onChanged: (value) => email1 = value.trim(),
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
@@ -220,7 +249,7 @@ class _LoginState extends State<Login> {
     return Container(
       margin: EdgeInsets.only(top: 8),
       child: SignInButton(
-        Buttons.GoogleDark,
+        Buttons.Google,
         onPressed: () => processSingInWithGooggle()
         /* {
           signInWithGoogle().then((result) {
@@ -237,9 +266,39 @@ class _LoginState extends State<Login> {
         
         }*/
         ,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
+  }
+
+  Future<List<UserModel>> regischeck(String uEmail) async {
+    //นำค่าเเป็น Params
+
+    final String pramsUrl =
+        "http://139.59.229.66:5002/api/Account/Login?email=${uEmail.toString()}";
+
+    final res = await http.post(
+      pramsUrl,
+      body: {'email': uEmail},
+    );
+
+    if (res.statusCode == 200) {
+      //   Iterable l = json.decode(response.body);
+      // List<GarageModel> garageModels =
+      //     l.map((g) => GarageModel.fromJson(g)).toList();
+
+      // return garageModels;
+
+      Iterable l = json.decode(res.body);
+      userModels = l.map((g) => UserModel.fromJson(g)).toList();
+      if (userModels.isEmpty) {
+        return null;
+      } else {
+        return userModels;
+      }
+    } else {
+      return null;
+    }
   }
 
   Future<Null> processSingInWithGooggle() async {
@@ -254,7 +313,9 @@ class _LoginState extends State<Login> {
       await _googleSignIn.signIn().then((value) async {
         //ดึงค่าจาก googleชื่อ และอีเมล
         String name = value.displayName;
-        String email = value.email;
+        email = value.email;
+        
+
         print('Login With Google success value Name = $name,email = $email');
         await value.authentication.then((value2) async {
           AuthCredential authCredential = GoogleAuthProvider.credential(
@@ -268,10 +329,30 @@ class _LoginState extends State<Login> {
             print('uid = $uid');
           });
         });
-        runApp(MyMap());
+        user = await regischeck(email);
+        setState(() {
+          _user = user;
+          print(_user);
+        });
+        _user == null
+            ? Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return Register(email: email,name:name);
+              }))
+            : runApp(MyMap(uid: _user.first.uid));
+        print('นี้งายยยยยยยย$user');
+        // _user == null ? Register(email: email) : runApp(MyMap(uid: "5"));
       });
     });
   }
+
+// checkuser(String email){
+//   Future<UserModel>
+
+//   if(email = ){
+
+//   }
+
+//}
 
   Future<Null> registerFirebase() async {
     await Firebase.initializeApp().then((value) {

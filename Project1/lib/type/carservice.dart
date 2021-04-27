@@ -1,5 +1,5 @@
-import 'package:project1/type/typestyle.dart';
 import 'package:flutter/material.dart';
+import 'package:project1/tab/mapsid.dart';
 import 'motercycleservice.dart';
 
 
@@ -108,23 +108,23 @@ class _ServiceState extends State<Service> {
                             children: [
                               Container(
                                 alignment: Alignment.topLeft,
-                                child: Mystyle().Buttontype('ครบวงจร'),
+                                child: buttontype('ครบวงจร',1),
                               ),
                               Container(
                                 alignment: Alignment.topLeft,
-                                child: Mystyle().Buttontype('เครื่องยนต์'),
+                                child: buttontype('เครื่องยนต์',2),
                               ),
                               Container(
                                 alignment: Alignment.topLeft,
-                                child: Mystyle().Buttontype('ระบบไฟฟ้ารถยนต์'),
+                                child: buttontype('ระบบไฟฟ้ารถยนต์',3),
                               ),
                               Container(
                                 alignment: Alignment.topLeft,
-                                child: Mystyle().Buttontype('ช่วงล่าง'),
+                                child: buttontype('ช่วงล่าง',4),
                               ),
                               Container(
                                 alignment: Alignment.topLeft,
-                                child: Mystyle().Buttontype('แก๊สรถยนต์'),
+                                child: buttontype('แก๊สรถยนต์',5),
                               ),
                             ],
                           ),
@@ -140,4 +140,20 @@ class _ServiceState extends State<Service> {
       ),
     );
   }
+    Widget buttontype(String name,int sid) => RaisedButton(
+        onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Mappage2(sid)));
+                  },
+        color: Color.fromRGBO(84, 198, 214, 1),
+        child: Text(
+          name,
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      );
 }
+
+
+  // ignore: non_constant_identifier_na
