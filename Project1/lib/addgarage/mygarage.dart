@@ -1,28 +1,39 @@
+import 'package:flutter/services.dart';
+import 'package:project1/Models/TestModel.dart';
 import 'package:project1/addgarage/addstep1.dart';
 import 'package:flutter/material.dart';
-
-
+import 'package:project1/addgarage/detailgarage.dart';
 
 class MyGaragePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyGarge(title: 'DetaiPage'),
       theme: ThemeData(fontFamily: 'Prompt'),
     );
   }
 }
 
 class MyGarge extends StatefulWidget {
-  MyGarge({Key key, this.title}) : super(key: key);
-  final String title;
-
   @override
-  _DetaiPage createState() => _DetaiPage();
+  _MyGargeState createState() => _MyGargeState();
 }
 
-class _DetaiPage extends State<MyGarge> {
+class _MyGargeState extends State<MyGarge> {
+  Future<List<GarageModel>> fetchGarage;
+  List<GarageModel> value;
+
+  int uid = 1;
+  @override
+  void initState() {
+    super.initState();
+    fetchGarage = fetchMygarage(uid);
+  }
+
+  Future<String> getJsonFile(String path) async {
+    return await rootBundle.loadString(path);
+  }
+
   double screen;
   @override
   Widget build(BuildContext context) {
@@ -77,24 +88,53 @@ class _DetaiPage extends State<MyGarge> {
                         ),
                       ),
                     ),
-                    Container(
-                        child: Center(
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: Color.fromRGBO(196, 196, 196, 1)),
-                                margin: EdgeInsets.all(20),
-                                child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      buildButtonCradle(),
-                                    ])))),
-                    Container(
+                  ])),
+            ),
+            Expanded(
+              child: FutureBuilder<List<GarageModel>>(
+                  future: fetchGarage,
+                  builder: (context, garageData) {
+                    if (garageData.hasError) {
+                      return Text(garageData.error);
+                    } else if (garageData.hasData) {
+                      value = garageData.data;
+                      print(value);
+                      return ListView.builder(
+                        itemCount: garageData.data.length,
+                        itemBuilder: (context, index) {
+                          String gname = value[index].gName.toString();
+                          String url = value[index].gImage.toString();
+                          return Card(
+                            child: Column(children: <Widget>[
+                              ListTile(
+                                  leading: CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage:
+                                          NetworkImage(url, scale: 1.0)),
+                                  title: Text(gname),
+                                  trailing: Icon(Icons.keyboard_arrow_right),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Garage2(value[index])));
+                                  }),
+                            ]),
+                          );
+                        },
+                      );
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  }),
+            ),
+                                Container(
                         alignment: Alignment.center,
                         child: Column(
                           children: <Widget>[
                             Container(
+                              margin: EdgeInsets.fromLTRB(5, 5, 5, 420),
                               width: 350,
                               height: 60,
                               child: RaisedButton(
@@ -113,33 +153,7 @@ class _DetaiPage extends State<MyGarge> {
                             )
                           ],
                         ))
-                  ])),
-            ),
           ],
         )));
   }
-}
-
-Widget buildButtonCradle() {
-  return Container(
-      child: Row(
-    children: <Widget>[
-      Expanded(
-        child: Image.network(
-          'https://www.iamcar.net/wp-content/uploads/2017/07/%E0%B8%97%E0%B8%A3%E0%B8%B1%E0%B8%9E%E0%B8%A2%E0%B9%8C%E0%B8%A3%E0%B8%B8%E0%B9%88%E0%B8%87%E0%B9%80%E0%B8%A3%E0%B8%B7%E0%B8%AD%E0%B8%87%E0%B8%A2%E0%B8%B2%E0%B8%87%E0%B8%A2%E0%B8%99%E0%B8%95%E0%B9%8C.jpg',
-          width: 200,
-          height: 60,
-          alignment: Alignment.centerLeft,
-        ),
-      ),
-      Expanded(
-        child: Text(
-          'ร้านทรัพย์รุ่งเรือง',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-              color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-        ),
-      ),
-    ],
-  ));
 }

@@ -93,7 +93,6 @@ Future<List<GarageModel>> fetchGarageDetail() async {
     Iterable l = json.decode(response.body);
     List<GarageModel> garageModels =
         l.map((g) => GarageModel.fromJson(g)).toList();
-
     return garageModels;
   } else {
     throw Exception('Failed to load Marker');
@@ -132,12 +131,17 @@ class ServiceModel {
     };
 }
 
-final String url = 'http://139.59.229.66:5002/api/Garage/GetServicebyGarage?g_Id=';
 
 Future<List<ServiceModel>> fetchGarageservice(int gid) async {
-  final response =
-      await http.get(url+gid.toString());
-
+ var endpointUrl = 'http://139.59.229.66:5002/api/Garage/GetServicebyGarage';
+  var queryParams = {
+    'gid': gid.toString(),
+  };
+  String queryString = Uri(queryParameters: queryParams).query;
+  var requestUrl = endpointUrl +
+      '?' +
+      queryString; // result - http://139.59.229.66:5002/api/CarInfo/GetMyCar?uid=1
+  var response = await http.get(requestUrl);
   if (response.statusCode == 200) {
     Iterable l = json.decode(response.body);
     List<ServiceModel> service =
@@ -145,6 +149,49 @@ Future<List<ServiceModel>> fetchGarageservice(int gid) async {
 
     return service;
   } else {
-    throw Exception('Failed to load Marker');
+    throw Exception('Failed to load Service');
+  }
+}
+
+
+Future<List<GarageModel>> fetchMygarage(int uid) async {
+ var endpointUrl = 'http://139.59.229.66:5002/api/Garage/GetGaragebyId';
+  var queryParams = {
+    'uid': uid.toString(),
+  };
+  String queryString = Uri(queryParameters: queryParams).query;
+  var requestUrl = endpointUrl +
+      '?' +
+      queryString; // result - http://139.59.229.66:5002/api/CarInfo/GetMyCar?uid=1
+  var response = await http.get(requestUrl);
+  if (response.statusCode == 200) {
+    Iterable l = json.decode(response.body);
+    List<GarageModel> garage =
+        l.map((g) => GarageModel.fromJson(g)).toList();
+
+    return garage;
+  } else {
+    throw Exception('Failed to load Service');
+  }
+}
+
+Future<List<GarageModel>> fetchservice(int sid) async {
+ var endpointUrl = 'http://139.59.229.66:5002/api/Garage/GetGarageByService';
+  var queryParams = {
+    'sid': sid.toString(),
+  };
+  String queryString = Uri(queryParameters: queryParams).query;
+  var requestUrl = endpointUrl +
+      '?' +
+      queryString; // result - http://139.59.229.66:5002/api/CarInfo/GetMyCar?uid=1
+  var response = await http.get(requestUrl);
+  if (response.statusCode == 200) {
+    Iterable l = json.decode(response.body);
+    List<GarageModel> service =
+        l.map((g) => GarageModel.fromJson(g)).toList();
+
+    return service;
+  } else {
+    throw Exception('Failed to load Service');
   }
 }

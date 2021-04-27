@@ -1,5 +1,5 @@
-import 'package:project1/type/typestyle.dart';
 import 'package:flutter/material.dart';
+import 'package:project1/tab/mapsid.dart';
 
 
 class MoterServicetype extends StatelessWidget {
@@ -114,23 +114,19 @@ class _MotercycleState extends State<Motercycle> {
               children: [
                 Container(
                   alignment: Alignment.topLeft,
-                  child: Mystyle().Buttontype('ครบวงจร'),
+                  child: buttontype('ครบวงจร',6),
                 ),
                 Container(
                   alignment: Alignment.topLeft,
-                  child: Mystyle().Buttontype('ปะ/เปลี่ยนยาง'),
+                  child: buttontype('ปะ/เปลี่ยนยาง',7),
                 ),
                 Container(
                   alignment: Alignment.topLeft,
-                  child: Mystyle().Buttontype('ระบบไฟฟ้า'),
+                  child: buttontype('ระบบไฟฟ้า',8),
                 ),
                 Container(
                   alignment: Alignment.topLeft,
-                  child: Mystyle().Buttontype('เครื่อง/ระบบเบรค'),
-                ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Mystyle().Buttontype('แก๊สรถยนต์'),
+                  child: buttontype('เครื่อง/ระบบเบรค',9),
                 ),
               ],
             ),
@@ -139,4 +135,17 @@ class _MotercycleState extends State<Motercycle> {
       ),
     );
   }
+   Widget buttontype(String name,int sid) => RaisedButton(
+        onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Mappage2(sid)));
+                  },
+        color: Color.fromRGBO(84, 198, 214, 1),
+        child: Text(
+          name,
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      );
 }

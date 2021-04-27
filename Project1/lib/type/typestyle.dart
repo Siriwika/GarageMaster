@@ -1,9 +1,12 @@
+
+
 import 'package:flutter/material.dart';
 
 class Mystyle {
   // ignore: non_constant_identifier_names
-  Widget Buttontype(String name) => RaisedButton(
-        onPressed: () {},
+  Widget Buttontype(String name,int sid) => RaisedButton(
+        onPressed: () {
+                  },
         color: Color.fromRGBO(84, 198, 214, 1),
         child: Text(
           name,
@@ -13,5 +16,5 @@ class Mystyle {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       );
 
-  Mystyle();
+    Mystyle();
 }
