@@ -14,12 +14,16 @@ class Garagestep1 extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Garage Master",
-        home: MyGarage1(),
+        home: MyGarage1(
+          uid:null,
+        ),
         theme: ThemeData(fontFamily: 'Prompt'));
   }
 }
 
 class MyGarage1 extends StatefulWidget {
+  final int uid;
+  MyGarage1({Key key,  this.uid}) : super(key: key);
   @override
   _MyGarage1State createState() => _MyGarage1State();
 }
@@ -187,6 +191,7 @@ class _MyGarage1State extends State<MyGarage1> {
                 gdescription: gDes,
                 gName: gN,
                 image: file,
+                uid: widget.uid,
               );
             },
           ));

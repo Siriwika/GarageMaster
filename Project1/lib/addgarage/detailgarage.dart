@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project1/Models/TestModel.dart';
+import 'package:project1/addgarage/mygarage.dart';
+import 'package:project1/editgarage/editgarage.dart';
+import 'package:project1/editgarage/editservice.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -23,6 +26,7 @@ class GaragePage2 extends StatelessWidget {
 
 class _Garage2State extends State<Garage2> {
   Future<List<ServiceModel>> futureservice;
+  Future<Map<dynamic, dynamic>> futuregarage;
   List<ServiceModel> values;
 
   Future<void> _makePhoneCall(String url) async {
@@ -37,6 +41,15 @@ class _Garage2State extends State<Garage2> {
     if (id != null) {
       futureservice = fetchGarageservice(id);
       return futureservice;
+    } else {
+      throw 'cannot get service';
+    }
+  }
+
+  Future<void> _deletegarage(int gid) {
+    if (gid != null) {
+      futuregarage = deletegarage(gid);
+      return futuregarage;
     } else {
       throw 'cannot get service';
     }
@@ -102,7 +115,11 @@ class _Garage2State extends State<Garage2> {
                   children: [
                     Text(
                       widget.garageModels.gName,
-                      style: TextStyle(color: Colors.green, fontSize: 22,fontWeight: FontWeight.bold,),
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       widget.garageModels.gDescription,
@@ -193,11 +210,12 @@ class _Garage2State extends State<Garage2> {
                         itemBuilder: (context, index) {
                           String service = values[index].sname;
                           return ListTile(
+                            tileColor: Color.fromRGBO(252, 207, 153, 1),
                             title: Text(
                               service,
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.lightBlue[700],
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -208,6 +226,66 @@ class _Garage2State extends State<Garage2> {
                       return CircularProgressIndicator();
                     }
                   }),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    color: Colors.green,
+                    child: Text('แก้ไขอู่',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        )),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  EditG(widget.garageModels)));
+                    }),
+                SizedBox(
+                  width: screen * 0.03,
+                ),
+                RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    color: Colors.green,
+                    child: Text('แก้บริการ',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        )),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  EditService(widget.garageModels)));
+                    }),
+                SizedBox(
+                  width: screen * 0.03,
+                ),
+                RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    color: Colors.red,
+                    child: Text('ลบอู่',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        )),
+                    onPressed: () {
+                      _deletegarage(gid);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MyGarge()));
+                    }),
+              ],
+            ),
+            SizedBox(
+              height: screen * 0.02,
             ),
           ],
         )),
