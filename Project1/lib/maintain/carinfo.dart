@@ -13,13 +13,16 @@ class MyApp2 extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Garage Master",
-        home: CarInfo1(),
+        home: CarInfo1(
+          uid:null,
+        ),
         theme: ThemeData(fontFamily: 'Prompt'));
   }
 }
 
 class CarInfo1 extends StatefulWidget {
-  CarInfo1({Key key, this.title}) : super(key: key);
+  final int uid;
+  CarInfo1({Key key, this.title,this.uid}) : super(key: key);
   final String title;
 
   @override
@@ -55,6 +58,7 @@ class _CarInfo1State extends State<CarInfo1> {
     DateTime cBraking,
     DateTime cTires,
     DateTime cSteering,
+    int uid,
   ) async {
     final mimeTypeData = lookupMimeType(
       imagE.path,
@@ -82,7 +86,7 @@ class _CarInfo1State extends State<CarInfo1> {
     imageUpload.fields['C_Braking'] = cBraking.toString();
     imageUpload.fields['C_Tires'] = cTires.toString();
     imageUpload.fields['C_Steering'] = cSteering.toString();
-    imageUpload.fields['UId'] = 1.toString();
+    imageUpload.fields['UId'] = uid.toString();
 
     try {
       final streamedResponse = await imageUpload.send();
@@ -612,7 +616,7 @@ class _CarInfo1State extends State<CarInfo1> {
 
   void _startUpload() async {
     final Map<String, dynamic> response = await insertCar(cbrand, file, date1,
-        date2, date3, date4, date5, date6, date7, date8, date9);
+        date2, date3, date4, date5, date6, date7, date8, date9,widget.uid);
     print(response);
     if (response == null) {
       normalDialog(context, 'สำเร็จ', 'เพิ่มข้อมูลรถเรียบร้อย');

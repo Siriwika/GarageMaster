@@ -13,13 +13,19 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Profile(),
+      home: Profile(
+        uid: null,
+        name: '',
+      ),
       theme: ThemeData(fontFamily: 'Prompt'),
     );
   }
 }
 
 class Profile extends StatefulWidget {
+  final int uid;
+  final String name;
+  Profile({Key key,  this.uid, this.name}) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -33,11 +39,10 @@ class _ProfileState extends State<Profile> {
   Color btnColor = Color(0xFFff955b);
   Color editorColor = Color(0xFF4044cc);
 
-  int uid = 1;
   @override
   void initState() {
     super.initState();
-    fetchCar = fetchCarDetail(uid);
+    fetchCar = fetchCarDetail(id);
   }
 
   Future<String> getJsonFile(String path) async {
@@ -50,9 +55,11 @@ class _ProfileState extends State<Profile> {
     runApp(MyApp1());
   }
 
+  int id;
   double screen;
   @override
   Widget build(BuildContext context) {
+    id = widget.uid;
     screen = MediaQuery.of(context).size.width;
     print('screen = $screen');
     return Scaffold(
@@ -72,7 +79,7 @@ class _ProfileState extends State<Profile> {
                 child: RaisedButton(
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyGarge()));
+                        MaterialPageRoute(builder: (context) => MyGarge(uid: id,name: widget.name,)));
                   },
                   color: mainColor,
                   child: Text(
@@ -87,8 +94,7 @@ class _ProfileState extends State<Profile> {
               ),
               Container(
                 margin: EdgeInsets.all(130),
-                child: Text(
-                  'Malya jerner',
+                child: Text(widget.name,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 25,
@@ -134,8 +140,10 @@ class _ProfileState extends State<Profile> {
                     child: RaisedButton(
                       color: Color.fromRGBO(196, 196, 196, 1),
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => CarInfo1()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CarInfo1(uid: id)));
                       },
                       child: Icon(Icons.add, size: 40, color: Colors.white),
                       shape: RoundedRectangleBorder(

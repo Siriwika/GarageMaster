@@ -167,13 +167,19 @@ class _LoginState extends State<Login> {
           });
           _regisToGbase == null
               ? print('ไม่ผ่านจ้า')
-              : HomePage(_regisToGbase.uid);
+              : Navigator.push(context, MaterialPageRoute(
+            builder: (context) {
+              return HomePage(uid:_regisToGbase.uid,
+                              name: _regisToGbase.name,);
+            },
+          ));
         } else {
           print(_user.first);
           var userResult = _user.first;
           Navigator.push(context, MaterialPageRoute(
             builder: (context) {
-              return HomePage(userResult.uid);
+              return HomePage(uid:userResult.uid,
+                              name:userResult.name);
             },
           ));
         }

@@ -19,6 +19,7 @@ class Garage2 extends StatelessWidget {
           gdescription: '',
           gName: '',
           image: null,
+          uid:null,
         ),
         theme: ThemeData(fontFamily: 'Prompt'));
   }
@@ -29,10 +30,12 @@ class MyGarage2 extends StatefulWidget {
   String gName;
   String gdescription;
   File image;
+  int uid;
 
   MyGarage2(
       {Key key,
       this.title,
+      this.uid,
       @required this.gName,
       this.gdescription,
       @required this.image})
@@ -370,6 +373,7 @@ class _MyGaragePage2 extends State<MyGarage2> {
                                         image: widget.image,
                                         lat: lat.toString(),
                                         long: long.toString(),
+                                        uid: widget.uid,
                                       )));
                         }
                       },

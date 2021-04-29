@@ -1,75 +1,28 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:mime/mime.dart';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:project1/Models/TestModel.dart';
 import 'package:project1/utility/dialog.dart';
-import 'package:http_parser/http_parser.dart';
 
-main() {
-  runApp(Garagestep3());
-}
-
-class Garagestep3 extends StatelessWidget {
+class Editser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyGarage3(
-        gCharge: null,
-        gCloseT: null,
-        gDate: '',
-        gName: '',
-        gOpenT: null,
-        gphone: '',
-        gServiceType: '',
-        image: null,
-        lat: null,
-        long: null,
-        uid:null,
-      ),
-      theme: ThemeData(fontFamily: 'Prompt'),
-    );
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(fontFamily: 'Prompt'));
   }
 }
 
-// ignore: must_be_immutable
-class MyGarage3 extends StatefulWidget {
-  String gServiceType;
-  String gDate;
-  String gCharge;
-  String gName, gdescription;
-  String gOpenT;
-  String gCloseT;
-  String lat;
-  String long;
-  String gphone;
-  File image;
-  int uid;
-
-  MyGarage3(
-      {Key key,
-      @required this.gName,
-      this.gdescription,
-      @required this.image,
-      @required this.gCharge,
-      @required this.gCloseT,
-      @required this.gDate,
-      @required this.gOpenT,
-      @required this.gServiceType,
-      @required this.gphone,
-      @required this.lat,
-      @required this.long,
-      this.uid,
-      })
-      : super(key: key);
-
+class EditService extends StatefulWidget {
+  final GarageModel garageModels;
+  EditService(this.garageModels);
   @override
-  _MyGarage3State createState() => _MyGarage3State();
+  _EditServiceState createState() => _EditServiceState();
 }
 
-class _MyGarage3State extends State<MyGarage3> {
+class _EditServiceState extends State<EditService> {
+  Future<Map<dynamic, dynamic>> futureservice;
   double screen;
-  var listAsJson;
   String i;
   var msv1 = '0';
   var msv2 = '0';
@@ -80,8 +33,6 @@ class _MyGarage3State extends State<MyGarage3> {
   var csv3 = '0';
   var csv4 = '0';
   var csv5 = '0';
-  String body;
-  List<String> addString = [];
   List<String> sid = [];
   List<String> sId = [];
   bool msv1check = false;
@@ -93,12 +44,13 @@ class _MyGarage3State extends State<MyGarage3> {
   bool csv3check = false;
   bool csv4check = false;
   bool csv5check = false;
-  bool spName1check = false;
-  bool spName2check = false;
 
-  sandsid() async {
-    for (int i = 0; i < 9; i++) {
-      return sid[i];
+  Future<void> _deleteAllservice(int gid) {
+    if (gid != null) {
+      futureservice = deletegarage(gid);
+      return futureservice;
+    } else {
+      throw 'cannot delete service';
     }
   }
 
@@ -280,7 +232,7 @@ class _MyGarage3State extends State<MyGarage3> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0)),
                     color: Colors.green,
-                    child: Text('เสร็จสิ้น',
+                    child: Text('อัปเดตบริการ',
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,
@@ -298,20 +250,13 @@ class _MyGarage3State extends State<MyGarage3> {
 
                       for (int g = 0; g < 9; g++) {
                         if (sid[g] != '0') {
-                          var obj='{${sid[g]}}';
+                          var obj = '{${sid[g]}}';
                           sId.add(obj);
                         }
                       }
                       print(sId);
-                      // String f = '{${sId.first}';
-                      // print(f);
-                      // String l = '${sId.last}}';
-                      // print(l);
-                      // sId[0] = f;
-                      // sId.last = l;
-                      // print(sId);
-
-                      _startUpload();
+                      _deleteAllservice(widget.garageModels.gId);
+                      _startEdit();
                       print('success');
                     },
                   )),
@@ -321,110 +266,6 @@ class _MyGarage3State extends State<MyGarage3> {
           ))
         ],
       )),
-    );
-  }
-
-  Uri uri = Uri.parse("http://139.59.229.66:5002/api/Garage/AddGarage");
-  Future<Map<dynamic, dynamic>> uploadG(
-      File imagE,
-      String gName,
-      String gdescription,
-      String gphone,
-      String gDate,
-      String lat,
-      String long,
-      String gCharge,
-      String gServiceType,
-      String gOpenT,
-      String gCloseT,
-      String lis,
-      int uid) async {
-    final mimeTypeData = lookupMimeType(
-      imagE.path,
-      headerBytes: [0xFF, 0xD8],
-    ).split('/');
-    final imageUpload = http.MultipartRequest('POST', uri);
-
-    final file = await http.MultipartFile.fromPath("fileImage", imagE.path,
-        contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-    imageUpload.headers.addAll({
-      'Content-Type': 'multipart/form-data',
-      'Accept-Encoding-Type': 'gzip, deflate, br',
-      'Accept-': '*/*',
-    });
-    print(file);
-    print(imagE);
-    print(sId.toString());
-    // String o = '[{"SId": 1, "SId": 3, "SId": 7, "SId": 8}]';
-    print(gName);
-    print(gdescription);
-    print(gphone);
-    print(gDate);
-    print(lat);
-    print(long);
-    print(gCharge);
-    print(gServiceType);
-    print(lis);
-    print(gOpenT);
-    print(gCloseT);
-    print(uid);
-    imageUpload.fields['G_Name'] = gName;
-    imageUpload.fields['G_Description'] = gdescription;
-    imageUpload.fields['G_Phone'] = gphone;
-    imageUpload.fields['G_Date'] = gDate;
-    imageUpload.fields['G_Latitude'] = lat;
-    imageUpload.fields['G_Longitude'] = long;
-    imageUpload.fields['G_charge'] = gCharge;
-    imageUpload.fields['G_Service_Type'] = gServiceType;
-    imageUpload.fields['listTmp'] = lis;
-    imageUpload.files.add(file);
-    imageUpload.fields['G_Open_Time'] = gOpenT;
-    imageUpload.fields['G_Close_Time'] = gCloseT;
-    imageUpload.fields['UId'] = uid.toString();
-
-    try {
-      final streamedResponse = await imageUpload.send();
-      final response = await http.Response.fromStream(streamedResponse);
-      if (response.statusCode != 200) {
-        print(response);
-      }
-      print(response.body);
-      Map<String, dynamic> reponseData = {"success":'${response.body}'};
-      return reponseData;
-    } catch (e) {
-      print(e);
-      return null;
-    }
-  }
-
-  void _startUpload() async {
-    final Map<String, dynamic> response = await uploadG(
-        widget.image,
-        widget.gName,
-        widget.gdescription,
-        widget.gphone,
-        widget.gDate,
-        widget.lat,
-        widget.long,
-        widget.gCharge,
-        widget.gServiceType,
-        widget.gOpenT,
-        widget.gCloseT,
-        sId.toString(),
-        widget.uid);
-    print(response);
-    if (response == null) {
-      normalDialog(context, 'ล้มเหลว', 'สร้างอู่ล้มเหลว ลองใหม่อีกครั้ง');
-    } else {
-      normalDialog(context, 'สำเร็จ', 'สร้างอู่เรียบร้อย');
-    }
-  }
-
-  BoxDecoration bgInput() {
-    return BoxDecoration(
-      color: Colors.white,
-      border: Border.all(width: 0, color: Colors.white),
-      borderRadius: const BorderRadius.all(const Radius.circular(25)),
     );
   }
 
@@ -440,5 +281,29 @@ class _MyGarage3State extends State<MyGarage3> {
       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
     );
   }
-}
 
+  void _startEdit() async {
+    final Map<String, dynamic> response =
+        await insertservice(sId.toString(), widget.garageModels.gId.toString());
+    print(response);
+    if (response == null) {
+      normalDialog(context, 'ล้มเหลว', 'แก้ไขบริการล้มเหลว ลองใหม่อีกครั้ง');
+    } else {
+      normalDialog(context, 'สำเร็จ', 'แก้ไขบริการเรียบร้อย');
+    }
+  }
+
+  Future<Map<dynamic, dynamic>> insertservice(String list, String gid) async {
+    final String apiUrl = "http://139.59.229.66:5002/api/Garage/InsertService";
+    final body = jsonEncode({"listTmp": list, "g_Id": gid});
+    final response = await http.post(apiUrl,
+        body: body,
+        headers: {'Content-Type': 'application/json', 'Accept': '*/*'});
+    if (response.statusCode != 200) {
+      print(response);
+    }
+    print(response.body);
+    Map<String, dynamic> reponseData = {"success": '${response.body}'};
+    return reponseData;
+  }
+}

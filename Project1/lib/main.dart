@@ -14,14 +14,18 @@ class MyMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        //home: HomePage(),
+        home: HomePage(
+          uid: null,
+          name: '',
+        ),
         theme: ThemeData(fontFamily: 'Prompt'));
   }
 }
 
 class HomePage extends StatefulWidget {
   final int uid;
-  HomePage(this.uid);
+  final String name;
+  HomePage({Key key, this.uid, this.name}) : super(key: key);
   @override
   State<HomePage> createState() => HomePageState();
 }
@@ -74,13 +78,15 @@ class HomePageState extends State<HomePage> {
 
 // ignore: camel_case_types
 class profilepage extends StatelessWidget {
-  const profilepage({
-    Key key,
-  }) : super(key: key);
-
+  final int uid;
+  final String name;
+  const profilepage({Key key, this.uid, this.name}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return ProfilePage();
+    return Profile(
+      uid: uid,
+      name: name,
+    );
   }
 }
 

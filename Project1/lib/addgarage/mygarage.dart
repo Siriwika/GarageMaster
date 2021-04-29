@@ -8,6 +8,10 @@ class MyGaragePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      home: MyGarge(
+        uid: null,
+        name: '',
+      ),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Prompt'),
     );
@@ -15,6 +19,9 @@ class MyGaragePage extends StatelessWidget {
 }
 
 class MyGarge extends StatefulWidget {
+  final int uid;
+  final String name;
+  MyGarge({Key key, this.uid, this.name}) : super(key: key);
   @override
   _MyGargeState createState() => _MyGargeState();
 }
@@ -23,20 +30,21 @@ class _MyGargeState extends State<MyGarge> {
   Future<List<GarageModel>> fetchGarage;
   List<GarageModel> value;
 
-  int uid = 1;
   @override
   void initState() {
     super.initState();
-    fetchGarage = fetchMygarage(uid);
+    fetchGarage = fetchMygarage(id);
   }
 
   Future<String> getJsonFile(String path) async {
     return await rootBundle.loadString(path);
   }
 
+  int id;
   double screen;
   @override
   Widget build(BuildContext context) {
+    id = widget.uid;
     screen = MediaQuery.of(context).size.width;
     print('screen = $screen');
     return Scaffold(
@@ -54,8 +62,7 @@ class _MyGargeState extends State<MyGarge> {
                     ),
                     Container(
                       margin: EdgeInsets.all(20),
-                      child: Text(
-                        'Malya jerner',
+                      child: Text(widget.name,
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 30,
@@ -129,30 +136,29 @@ class _MyGargeState extends State<MyGarge> {
                     }
                   }),
             ),
-                                Container(
-                        alignment: Alignment.center,
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.fromLTRB(5, 5, 5, 420),
-                              width: 350,
-                              height: 60,
-                              child: RaisedButton(
-                                color: Color.fromRGBO(196, 196, 196, 1),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Garagestep1()));
-                                },
-                                child: Icon(Icons.add,
-                                    size: 40, color: Colors.white),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0)),
-                              ),
-                            )
-                          ],
-                        ))
+            Container(
+                alignment: Alignment.center,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.fromLTRB(5, 5, 5, 420),
+                      width: 350,
+                      height: 60,
+                      child: RaisedButton(
+                        color: Color.fromRGBO(196, 196, 196, 1),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyGarage1(uid: id)));
+                        },
+                        child: Icon(Icons.add, size: 40, color: Colors.white),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                      ),
+                    )
+                  ],
+                ))
           ],
         )));
   }
