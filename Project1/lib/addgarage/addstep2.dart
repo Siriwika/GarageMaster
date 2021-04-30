@@ -19,7 +19,8 @@ class Garage2 extends StatelessWidget {
           gdescription: '',
           gName: '',
           image: null,
-          uid:null,
+          uid: null,
+          name: '',
         ),
         theme: ThemeData(fontFamily: 'Prompt'));
   }
@@ -27,13 +28,15 @@ class Garage2 extends StatelessWidget {
 
 // ignore: must_be_immutable
 class MyGarage2 extends StatefulWidget {
+  final String name;
   String gName;
   String gdescription;
   File image;
-  int uid;
+  final int uid;
 
   MyGarage2(
       {Key key,
+      this.name,
       this.title,
       this.uid,
       @required this.gName,
@@ -88,30 +91,6 @@ class _MyGaragePage2 extends State<MyGarage2> {
       return null;
     }
   }
-
-  // void loadDatagDate() {
-  //   listDrop = [];
-  //   listDrop.add(DropdownMenuItem(
-  //     child: Text('ทุกวัน'),
-  //     value: "ทุกวัน",
-  //   ));
-  //   listDrop.add(DropdownMenuItem(
-  //     child: Text('จ-ศ'),
-  //     value: "จ-ศ",
-  //   ));
-  // }
-
-  // void loadDatagService() {
-  //   listDrop = [];
-  //   listDrop.add(DropdownMenuItem(
-  //     child: Text('ไปหาถึงที่ได้'),
-  //     value: "ไปหาถึงที่ได้",
-  //   ));
-  //   listDrop.add(DropdownMenuItem(
-  //     child: Text('เฉพาะที่อู่เท่านั้น'),
-  //     value: "เฉพาะที่อู่เท่านั้น",
-  //   ));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -348,10 +327,10 @@ class _MyGaragePage2 extends State<MyGarage2> {
                             (_gCharge == null) ||
                             (_gServiceType?.isEmpty ?? true)) {
                           normalDialog(context, "คุณยังไม่ได้กรอกข้อมูล",
-                              "กรุณากรอกข้อมูลให้ครบ");
+                              "กรุณากรอกข้อมูลให้ครบ",5);
                         } else if (gphone.length != 10) {
                           normalDialog(context, "เบอร์โทรไม่ครบ 10 หลัก",
-                              "กรุณากรอกเบอร์โทรให้ครบ 10 หลัก");
+                              "กรุณากรอกเบอร์โทรให้ครบ 10 หลัก",5);
                         } else {
                           final localizations =
                               MaterialLocalizations.of(context);
@@ -362,6 +341,7 @@ class _MyGaragePage2 extends State<MyGarage2> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => MyGarage3(
+                                        name: widget.name,
                                         gdescription: widget.gdescription,
                                         gCharge: gc.text,
                                         gCloseT: gO,
@@ -464,4 +444,3 @@ class _MyGaragePage2 extends State<MyGarage2> {
     );
   }
 }
-

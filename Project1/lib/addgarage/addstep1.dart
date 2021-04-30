@@ -15,7 +15,8 @@ class Garagestep1 extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: "Garage Master",
         home: MyGarage1(
-          uid:null,
+          uid: null,
+          name: '',
         ),
         theme: ThemeData(fontFamily: 'Prompt'));
   }
@@ -23,7 +24,8 @@ class Garagestep1 extends StatelessWidget {
 
 class MyGarage1 extends StatefulWidget {
   final int uid;
-  MyGarage1({Key key,  this.uid}) : super(key: key);
+  final String name;
+  MyGarage1({Key key, this.uid, this.name}) : super(key: key);
   @override
   _MyGarage1State createState() => _MyGarage1State();
 }
@@ -177,17 +179,18 @@ class _MyGarage1State extends State<MyGarage1> {
       onPressed: () {
         if ((gName?.isEmpty ?? true) && (file == null)) {
           normalDialog(context, "คุณยังไม่ได้กรอกข้อมูล",
-              "กรุณาเพิ่มรูปภาพอู่ และ ชื่อร้าน");
+              "กรุณาเพิ่มรูปภาพอู่ และ ชื่อร้าน",5);
         } else if (gName?.isEmpty ?? true) {
-          normalDialog(context, "คุณยังกรอกชื่อร้าน", "กรุณากรอกชื่อร้าน");
+          normalDialog(context, "คุณยังกรอกชื่อร้าน", "กรุณากรอกชื่อร้าน",5);
         } else if (file == null) {
-          normalDialog(context, "คุณยังเพิ่มรูปภาพอู่", "กรุณาเพิ่มรูปภาพอู่");
+          normalDialog(context, "คุณยังเพิ่มรูปภาพอู่", "กรุณาเพิ่มรูปภาพอู่",5);
         } else {
           String gDes = gDescriptioncontroller.text;
           String gN = gNAMEcontroller.text;
           Navigator.push(context, MaterialPageRoute(
             builder: (context) {
               return MyGarage2(
+                name: widget.name,
                 gdescription: gDes,
                 gName: gN,
                 image: file,
@@ -239,4 +242,3 @@ class _MyGarage1State extends State<MyGarage1> {
     } catch (e) {}
   }
 }
-

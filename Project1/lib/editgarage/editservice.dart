@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:project1/Models/TestModel.dart';
+import 'package:project1/addgarage/mygarage.dart';
 import 'package:project1/utility/dialog.dart';
 
 class Editser extends StatelessWidget {
@@ -13,9 +14,12 @@ class Editser extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class EditService extends StatefulWidget {
   final GarageModel garageModels;
-  EditService(this.garageModels);
+  String name;
+  int uid;
+  EditService(this.garageModels, this.name, this.uid);
   @override
   _EditServiceState createState() => _EditServiceState();
 }
@@ -45,10 +49,12 @@ class _EditServiceState extends State<EditService> {
   bool csv4check = false;
   bool csv5check = false;
 
+  // ignore: missing_return
   Future<void> _deleteAllservice(int gid) {
     if (gid != null) {
-      futureservice = deletegarage(gid);
-      return futureservice;
+      futureservice = deleteAllservice(gid);
+      print('{$futureservice}');
+      //return futureservice;
     } else {
       throw 'cannot delete service';
     }
@@ -258,6 +264,13 @@ class _EditServiceState extends State<EditService> {
                       _deleteAllservice(widget.garageModels.gId);
                       _startEdit();
                       print('success');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyGarge(
+                                    uid: widget.uid,
+                                    name: widget.name,
+                                  )));
                     },
                   )),
                 ),
@@ -284,25 +297,40 @@ class _EditServiceState extends State<EditService> {
 
   void _startEdit() async {
     final Map<String, dynamic> response =
-        await insertservice(sId.toString(), widget.garageModels.gId.toString());
+        await insertservice(sId.toString(), widget.garageModels.gId);
     print(response);
     if (response == null) {
-      normalDialog(context, 'ล้มเหลว', 'แก้ไขบริการล้มเหลว ลองใหม่อีกครั้ง');
+      normalDialog(context, 'ล้มเหลว', 'แก้ไขบริการล้มเหลว ลองใหม่อีกครั้ง',5);
     } else {
-      normalDialog(context, 'สำเร็จ', 'แก้ไขบริการเรียบร้อย');
+      normalDialog(context, 'สำเร็จ', 'แก้ไขบริการเรียบร้อย',5);
     }
   }
 
-  Future<Map<dynamic, dynamic>> insertservice(String list, String gid) async {
+  Future<Map<dynamic, dynamic>> deleteAllservice(int gid) async {
+    final String pramsUrl =
+        "http://139.59.229.66:5002/api/Garage/DeleteService?gid=$gid";
+
+    final response = await http.delete(pramsUrl);
+
+    if (response.statusCode != 200) {
+      print(response);
+    }
+    print(response.body);
+    Map<String, dynamic> reponseData = {"success": '${response.body}'};
+    return reponseData;
+  }
+
+  Future<Map<dynamic, dynamic>> insertservice(String list, int gid) async {
     final String apiUrl = "http://139.59.229.66:5002/api/Garage/InsertService";
-    final body = jsonEncode({"listTmp": list, "g_Id": gid});
+    final body = json.encode({"listTmp": list, "g_Id": gid});
     final response = await http.post(apiUrl,
         body: body,
         headers: {'Content-Type': 'application/json', 'Accept': '*/*'});
     if (response.statusCode != 200) {
       print(response);
     }
-    print(response.body);
+    print('${response.statusCode}');
+    print('${response.body}');
     Map<String, dynamic> reponseData = {"success": '${response.body}'};
     return reponseData;
   }

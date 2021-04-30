@@ -4,6 +4,7 @@ import 'package:project1/addgarage/addstep1.dart';
 import 'package:flutter/material.dart';
 import 'package:project1/addgarage/detailgarage.dart';
 
+
 class MyGaragePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class MyGaragePage extends StatelessWidget {
 class MyGarge extends StatefulWidget {
   final int uid;
   final String name;
-  MyGarge({Key key, this.uid, this.name}) : super(key: key);
+  MyGarge({Key key, this.uid, this.name}) ;
   @override
   _MyGargeState createState() => _MyGargeState();
 }
@@ -33,7 +34,7 @@ class _MyGargeState extends State<MyGarge> {
   @override
   void initState() {
     super.initState();
-    fetchGarage = fetchMygarage(id);
+    fetchGarage = fetchMygarage(widget.uid);
   }
 
   Future<String> getJsonFile(String path) async {
@@ -62,7 +63,8 @@ class _MyGargeState extends State<MyGarge> {
                     ),
                     Container(
                       margin: EdgeInsets.all(20),
-                      child: Text(widget.name,
+                      child: Text(
+                        widget.name,
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 30,
@@ -125,7 +127,7 @@ class _MyGargeState extends State<MyGarge> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                Garage2(value[index])));
+                                                Garage2(value[index],widget.name,widget.uid)));
                                   }),
                             ]),
                           );
@@ -150,7 +152,10 @@ class _MyGargeState extends State<MyGarge> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => MyGarage1(uid: id)));
+                                  builder: (context) => MyGarage1(
+                                        uid: id,
+                                        name: widget.name,
+                                      )));
                         },
                         child: Icon(Icons.add, size: 40, color: Colors.white),
                         shape: RoundedRectangleBorder(
