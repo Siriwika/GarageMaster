@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:one_time_dialog/one_time_dialog.dart';
 
 Future<Null> normalDialog(
-    BuildContext context, String string1, String string2) async {
+    BuildContext context, String string1, String string2,int time) async {
   showDialog(
     context: context,
-    builder: (context) => SimpleDialog(
+    builder: (context) => OneTimeDialog(
+      amountOfTimesToShow: time,
       title: ListTile(
         title: Text(
           string1,
@@ -17,9 +19,11 @@ Future<Null> normalDialog(
         ),
         subtitle: Text(string2),
       ),
-      children: [
+      actions: [
         TextButton(onPressed: () => Navigator.pop(context), child: Text('OK')),
       ],
+      context: context,
+      id: 'AUniqueID',
     ),
   );
 }

@@ -8,6 +8,7 @@ import 'package:project1/maintain/carinfo.dart';
 import 'package:project1/maintain/mycarinfo.dart';
 import 'package:project1/sign_in.dart';
 
+
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -39,10 +40,19 @@ class _ProfileState extends State<Profile> {
   Color btnColor = Color(0xFFff955b);
   Color editorColor = Color(0xFF4044cc);
 
-  @override
-  void initState() {
+
+  void setcar(int id) {
     super.initState();
     fetchCar = fetchCarDetail(id);
+  }
+
+  Future<void> _setcar(int id) {
+    if (id != null) {
+      fetchCar = fetchCarDetail(id);
+      return fetchCar;
+    } else {
+      throw 'cannot get car';
+    }
   }
 
   Future<String> getJsonFile(String path) async {
@@ -57,9 +67,14 @@ class _ProfileState extends State<Profile> {
 
   int id;
   double screen;
+  String name;
   @override
   Widget build(BuildContext context) {
     id = widget.uid;
+    name = widget.name;
+    setState(() {
+      _setcar(id);
+    });
     screen = MediaQuery.of(context).size.width;
     print('screen = $screen');
     return Scaffold(
@@ -70,60 +85,56 @@ class _ProfileState extends State<Profile> {
         ),
         body: SafeArea(
             child: Column(children: [
-          Expanded(
-              child: SingleChildScrollView(
-                  child: Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              Container(
-                child: RaisedButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyGarge(uid: id,name: widget.name,)));
-                  },
-                  color: mainColor,
-                  child: Text(
-                    'อู่ของฉัน >',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          bottomLeft: Radius.circular(15))),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.all(130),
-                child: Text(widget.name,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ))),
           Container(
+            child: RaisedButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => MyGarge(uid: id,name: widget.name,)));
+          },
+          color: mainColor,
+          child: Text(
+            'อู่ของฉัน >',
+            style: TextStyle(color: Colors.white),
+          ),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  bottomLeft: Radius.circular(15))),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(205,0,0,0),
+            child: Text(name,
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 22,
+              fontWeight: FontWeight.bold),
+            ),
+          ),
+            ],
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
             child: Container(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                width: 130,
-                height: 50,
-                decoration: BoxDecoration(
-                    color: mainColor,
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(15),
-                        bottomRight: Radius.circular(15))),
-                child: Center(
-                  child: Text(
-                    'รถของฉัน',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                    ),
+              margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+              width: 130,
+              height: 50,
+              decoration: BoxDecoration(
+                  color: mainColor,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15),
+                      bottomRight: Radius.circular(15))),
+              child: Center(
+                child: Text(
+                  'รถของฉัน',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
               ),
@@ -131,26 +142,22 @@ class _ProfileState extends State<Profile> {
           ),
           Container(
               alignment: Alignment.center,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    width: screen * 0.9,
-                    height: screen * 0.15,
-                    margin: EdgeInsets.fromLTRB(0, 20, 0, 30),
-                    child: RaisedButton(
-                      color: Color.fromRGBO(196, 196, 196, 1),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CarInfo1(uid: id)));
-                      },
-                      child: Icon(Icons.add, size: 40, color: Colors.white),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0)),
-                    ),
-                  )
-                ],
+              child: Container(
+                width: screen * 0.9,
+                height: screen * 0.15,
+                margin: EdgeInsets.fromLTRB(0, 20, 0, 30),
+                child: RaisedButton(
+                  color: Color.fromRGBO(196, 196, 196, 1),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CarInfo1(uid: id,name: name,)));
+                  },
+                  child: Icon(Icons.add, size: 40, color: Colors.white),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0)),
+                ),
               )),
           SizedBox(
             height: 2,

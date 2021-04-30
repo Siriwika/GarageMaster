@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:mime/mime.dart';
 import 'package:project1/Models/TestModel.dart';
 import 'package:http/http.dart' as http;
+import 'package:project1/addgarage/mygarage.dart';
 import 'package:project1/utility/dialog.dart';
 
 class Editgarage extends StatelessWidget {
@@ -18,9 +20,12 @@ class Editgarage extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class EditG extends StatefulWidget {
   final GarageModel garageModels;
-  EditG(this.garageModels);
+  int uid;
+  String name;
+  EditG({Key key, @required this.uid, @required this.name, this.garageModels});
 
   @override
   _EditGState createState() => _EditGState();
@@ -59,6 +64,8 @@ class _EditGState extends State<EditG> {
   String gst;
   String gopT;
   String gcT;
+  String baseImg;
+  MultipartFile file1;
 
   void initState() {
     super.initState();
@@ -425,14 +432,21 @@ class _EditGState extends State<EditG> {
                     )),
                 onPressed: () async {
                   if (file == null) {
-                    //แปลงรูปในเอพีไอ จาก string เป็น file
-                    // final filePath = await FlutterAbsolutePath.getAbsolutePath(
-                    //     widget.garageModels.gImage);
-                    img = widget.garageModels.fileImage;
-                    print(img);
+                    baseImg = widget.garageModels.gImage;
+                    file1 = http.MultipartFile.fromString("FileImage", "null");
+                    print(baseImg);
                   } else {
                     img = file;
-                    print(file);
+                    final mimeTypeData = lookupMimeType(
+                      img.path,
+                      headerBytes: [0xFF, 0xD8],
+                    ).split('/');
+                    file1 = await http.MultipartFile.fromPath(
+                        "FileImage", img.path,
+                        contentType:
+                            MediaType(mimeTypeData[0], mimeTypeData[1]));
+                    print(file1);
+                    baseImg = null;
                   }
                   if (gNAMEcontroller.text.isEmpty) {
                     name = widget.garageModels.gName;
@@ -616,7 +630,6 @@ class _EditGState extends State<EditG> {
 
   Uri uri = Uri.parse("http://139.59.229.66:5002/api/Garage/UpdateGarage");
   Future<Map<dynamic, dynamic>> updateG(
-      File img,
       String name,
       String des,
       String phonNO,
@@ -627,20 +640,14 @@ class _EditGState extends State<EditG> {
       String long,
       String gC,
       String gst) async {
-    final mimeTypeData = lookupMimeType(
-      img.path,
-      headerBytes: [0xFF, 0xD8],
-    ).split('/');
     final imageUpload = http.MultipartRequest('PUT', uri);
 
-    final file = await http.MultipartFile.fromPath("FileImage", img.path,
-        contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
     imageUpload.headers.addAll({
       'Content-Type': 'multipart/form-data',
       'Accept-Encoding-Type': 'gzip, deflate, br',
       'Accept-': '*/*',
     });
-    print(file);
+    print(file1);
     print(img);
     print(name);
     print(des);
@@ -652,6 +659,7 @@ class _EditGState extends State<EditG> {
     print(gst);
     print(gopT);
     print(gcT);
+    imageUpload.fields['G_Image'] = baseImg;
     imageUpload.fields['G_Name'] = name;
     imageUpload.fields['G_Description'] = des;
     imageUpload.fields['G_Phone'] = phonNO;
@@ -660,7 +668,7 @@ class _EditGState extends State<EditG> {
     imageUpload.fields['G_Longitude'] = long;
     imageUpload.fields['G_charge'] = gC;
     imageUpload.fields['G_Service_Type'] = gst;
-    imageUpload.files.add(file);
+    imageUpload.files.add(file1);
     imageUpload.fields['G_Open_Time'] = gopT;
     imageUpload.fields['G_Close_Time'] = gcT;
     imageUpload.fields['G_Id'] = widget.garageModels.gId.toString();
@@ -682,13 +690,20 @@ class _EditGState extends State<EditG> {
   }
 
   void _startdate() async {
-    final Map<String, dynamic> response = await updateG(img, name, des, phonNO,
-        gd, gopT, gcT, lat.toString(), long.toString(), gC, gst);
+    final Map<String, dynamic> response = await updateG(name, des, phonNO, gd,
+        gopT, gcT, lat.toString(), long.toString(), gC, gst);
     print(response);
     if (response == null) {
-      normalDialog(context, 'ล้มเหลว', 'แก้ไขข้อมูลล้มเหลว ลองใหม่อีกครั้ง');
+      normalDialog(context, 'ล้มเหลว', 'แก้ไขข้อมูลล้มเหลว ลองใหม่อีกครั้ง',5);
     } else {
-      normalDialog(context, 'สำเร็จ', 'แก้ไขข้อมูลอู่เรียบร้อย');
+      normalDialog(context, 'สำเร็จ', 'แก้ไขข้อมูลอู่เรียบร้อย',5);
+      Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyGarge(
+                                uid: widget.uid,
+                                name: widget.name,
+                              )));
     }
   }
 }

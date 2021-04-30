@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
+import 'package:project1/addgarage/mygarage.dart';
 import 'package:project1/utility/dialog.dart';
 import 'package:http_parser/http_parser.dart';
 
@@ -25,7 +26,8 @@ class Garagestep3 extends StatelessWidget {
         image: null,
         lat: null,
         long: null,
-        uid:null,
+        uid: null,
+        name: '',
       ),
       theme: ThemeData(fontFamily: 'Prompt'),
     );
@@ -45,23 +47,24 @@ class MyGarage3 extends StatefulWidget {
   String gphone;
   File image;
   int uid;
+  String name;
 
-  MyGarage3(
-      {Key key,
-      @required this.gName,
-      this.gdescription,
-      @required this.image,
-      @required this.gCharge,
-      @required this.gCloseT,
-      @required this.gDate,
-      @required this.gOpenT,
-      @required this.gServiceType,
-      @required this.gphone,
-      @required this.lat,
-      @required this.long,
-      this.uid,
-      })
-      : super(key: key);
+  MyGarage3({
+    Key key,
+    this.name,
+    @required this.gName,
+    this.gdescription,
+    @required this.image,
+    @required this.gCharge,
+    @required this.gCloseT,
+    @required this.gDate,
+    @required this.gOpenT,
+    @required this.gServiceType,
+    @required this.gphone,
+    @required this.lat,
+    @required this.long,
+    this.uid,
+  }) : super(key: key);
 
   @override
   _MyGarage3State createState() => _MyGarage3State();
@@ -295,24 +298,14 @@ class _MyGarage3State extends State<MyGarage3> {
                       sid.add(msv2);
                       sid.add(msv3);
                       sid.add(msv4);
-
                       for (int g = 0; g < 9; g++) {
                         if (sid[g] != '0') {
-                          var obj='{${sid[g]}}';
+                          var obj = '{${sid[g]}}';
                           sId.add(obj);
                         }
                       }
                       print(sId);
-                      // String f = '{${sId.first}';
-                      // print(f);
-                      // String l = '${sId.last}}';
-                      // print(l);
-                      // sId[0] = f;
-                      // sId.last = l;
-                      // print(sId);
-
                       _startUpload();
-                      print('success');
                     },
                   )),
                 ),
@@ -389,7 +382,7 @@ class _MyGarage3State extends State<MyGarage3> {
         print(response);
       }
       print(response.body);
-      Map<String, dynamic> reponseData = {"success":'${response.body}'};
+      Map<String, dynamic> reponseData = {"success": '${response.body}'};
       return reponseData;
     } catch (e) {
       print(e);
@@ -414,9 +407,16 @@ class _MyGarage3State extends State<MyGarage3> {
         widget.uid);
     print(response);
     if (response == null) {
-      normalDialog(context, 'ล้มเหลว', 'สร้างอู่ล้มเหลว ลองใหม่อีกครั้ง');
+      normalDialog(context, 'ล้มเหลว', 'สร้างอู่ล้มเหลว ลองใหม่อีกครั้ง', 5);
     } else {
-      normalDialog(context, 'สำเร็จ', 'สร้างอู่เรียบร้อย');
+      normalDialog(context, 'สำเร็จ', 'สร้างอู่เรียบร้อย', 5);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyGarge(
+                    uid: widget.uid,
+                    name: widget.name,
+                  )));
     }
   }
 
@@ -441,4 +441,3 @@ class _MyGarage3State extends State<MyGarage3> {
     );
   }
 }
-

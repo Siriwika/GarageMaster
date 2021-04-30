@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
+import 'package:project1/tab/profile.dart';
 import 'package:project1/utility/dialog.dart';
 
 class MyApp2 extends StatelessWidget {
@@ -14,7 +15,8 @@ class MyApp2 extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: "Garage Master",
         home: CarInfo1(
-          uid:null,
+          uid: null,
+          name: '',
         ),
         theme: ThemeData(fontFamily: 'Prompt'));
   }
@@ -22,7 +24,8 @@ class MyApp2 extends StatelessWidget {
 
 class CarInfo1 extends StatefulWidget {
   final int uid;
-  CarInfo1({Key key, this.title,this.uid}) : super(key: key);
+  final String name;
+  CarInfo1({Key key, this.title, this.uid, this.name}) : super(key: key);
   final String title;
 
   @override
@@ -586,6 +589,7 @@ class _CarInfo1State extends State<CarInfo1> {
                         child: RaisedButton(
                           onPressed: () {
                             cbrand = cbrandcontroller.text;
+
                             _startUpload();
                             print('success');
                             print(date1);
@@ -616,13 +620,18 @@ class _CarInfo1State extends State<CarInfo1> {
 
   void _startUpload() async {
     final Map<String, dynamic> response = await insertCar(cbrand, file, date1,
-        date2, date3, date4, date5, date6, date7, date8, date9,widget.uid);
+        date2, date3, date4, date5, date6, date7, date8, date9, widget.uid);
     print(response);
     if (response == null) {
-      normalDialog(context, 'สำเร็จ', 'เพิ่มข้อมูลรถเรียบร้อย');
+      normalDialog(context, 'สำเร็จ', 'เพิ่มข้อมูลรถเรียบร้อย', 5);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  Profile(uid: widget.uid, name: widget.name)));
     } else {
-      normalDialog(context, 'ล้มเหลว', 'เพิ่มข้อมูลรถล้มเหลว ลองใหม่อีกครั้ง');
-      
+      normalDialog(
+          context, 'ล้มเหลว', 'เพิ่มข้อมูลรถล้มเหลว ลองใหม่อีกครั้ง', 5);
     }
   }
 

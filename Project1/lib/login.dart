@@ -7,7 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:project1/Models/userModels.dart';
 import 'package:http/http.dart' as http;
-
 import 'main.dart';
 
 Future<void> main() async {

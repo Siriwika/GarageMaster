@@ -7,9 +7,12 @@ import 'package:project1/editgarage/editservice.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 
+// ignore: must_be_immutable
 class Garage2 extends StatefulWidget {
   final GarageModel garageModels;
-  Garage2(this.garageModels);
+  String name;
+  int uid;
+  Garage2(this.garageModels, this.name, this.uid);
 
   @override
   _Garage2State createState() => _Garage2State();
@@ -243,8 +246,11 @@ class _Garage2State extends State<Garage2> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  EditG(widget.garageModels)));
+                              builder: (context) => EditG(
+                                    name: widget.name,
+                                    uid: widget.uid,
+                                    garageModels: widget.garageModels,
+                                  )));
                     }),
                 SizedBox(
                   width: screen * 0.03,
@@ -262,8 +268,10 @@ class _Garage2State extends State<Garage2> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  EditService(widget.garageModels)));
+                              builder: (context) => EditService(
+                                  widget.garageModels,
+                                  widget.name,
+                                  widget.uid)));
                     }),
                 SizedBox(
                   width: screen * 0.03,
@@ -279,8 +287,13 @@ class _Garage2State extends State<Garage2> {
                         )),
                     onPressed: () {
                       _deletegarage(gid);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MyGarge()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyGarge(
+                                    uid: widget.uid,
+                                    name: widget.name,
+                                  )));
                     }),
               ],
             ),

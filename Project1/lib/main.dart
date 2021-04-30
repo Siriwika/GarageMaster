@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:firebase_core/firebase_core.dart';
 import 'package:project1/type/carservice.dart';
 import 'package:project1/tab/mappage.dart';
 import 'package:project1/tab/profile.dart';
@@ -31,25 +29,33 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  int i ;
+  String n;
   int _selectedTab = 0;
-  static const TextStyle optionStyle =
+  
+  @override
+  Widget build(BuildContext context) {
+
+    // const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> tabs = <Widget>[
+   List<Widget> tabs = <Widget>[
+    
     //ยังใช้ กูเกิ้ลเม็บไม่ได้เครื่ืองไหนใช้ได้ ให้ใช้เมธอดนี้
     mappage(),
     //ถ้าใช้เมธอดด้านบนให้ลบ textด้านล่างออก
     //Text('map'),
     service(),
-    profilepage()
+    profilepage(uid: i,name: n,),
+
   ];
   void _onItemTapped(int index) {
     setState(() {
       _selectedTab = index;
     });
   }
+    i = widget.uid;
+    n = widget.name;
 
-  @override
-  Widget build(BuildContext conmaptext) {
     // ignore: unused_element
     return Scaffold(
       body: Center(child: tabs.elementAt(_selectedTab)),
@@ -76,11 +82,11 @@ class HomePageState extends State<HomePage> {
   }
 }
 
-// ignore: camel_case_types
+//ignore: camel_case_types
 class profilepage extends StatelessWidget {
   final int uid;
   final String name;
-  const profilepage({Key key, this.uid, this.name}) : super(key: key);
+  profilepage({Key key, this.uid, this.name}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Profile(
