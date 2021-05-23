@@ -8,7 +8,6 @@ import 'package:project1/maintain/carinfo.dart';
 import 'package:project1/maintain/mycarinfo.dart';
 import 'package:project1/sign_in.dart';
 
-
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class ProfilePage extends StatelessWidget {
 class Profile extends StatefulWidget {
   final int uid;
   final String name;
-  Profile({Key key,  this.uid, this.name}) : super(key: key);
+  Profile({Key key, this.uid, this.name}) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -39,7 +38,6 @@ class _ProfileState extends State<Profile> {
   Color secondColor = Color.fromRGBO(251, 186, 110, 1);
   Color btnColor = Color(0xFFff955b);
   Color editorColor = Color(0xFF4044cc);
-
 
   void setcar(int id) {
     super.initState();
@@ -62,7 +60,6 @@ class _ProfileState extends State<Profile> {
   Future<void> _signOutGoogle() async {
     await googleSignIn.signOut();
     print("User Signed Out");
-    runApp(MyApp1());
   }
 
   int id;
@@ -88,32 +85,38 @@ class _ProfileState extends State<Profile> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-          Container(
-            child: RaisedButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MyGarge(uid: id,name: widget.name,)));
-          },
-          color: mainColor,
-          child: Text(
-            'อู่ของฉัน >',
-            style: TextStyle(color: Colors.white),
-          ),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  bottomLeft: Radius.circular(15))),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(205,0,0,0),
-            child: Text(name,
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-              fontWeight: FontWeight.bold),
-            ),
-          ),
+              Container(
+                child: RaisedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyGarge(
+                                  uid: id,
+                                  name: widget.name,
+                                )));
+                  },
+                  color: mainColor,
+                  child: Text(
+                    'อู่ของฉัน >',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          bottomLeft: Radius.circular(15))),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(205, 0, 0, 0),
+                child: Text(
+                  name,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
             ],
           ),
           Container(
@@ -152,7 +155,10 @@ class _ProfileState extends State<Profile> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => CarInfo1(uid: id,name: name,)));
+                            builder: (context) => CarInfo1(
+                                  uid: id,
+                                  name: name,
+                                )));
                   },
                   child: Icon(Icons.add, size: 40, color: Colors.white),
                   shape: RoundedRectangleBorder(
@@ -210,7 +216,11 @@ class _ProfileState extends State<Profile> {
                     width: screen * 0.7,
                     height: screen * 0.15,
                     child: RaisedButton(
-                      onPressed: _signOutGoogle,
+                      onPressed: () {
+                        _signOutGoogle();
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => MyApp1()));
+                      },
                       child: Text(
                         'Sign Out',
                         style: TextStyle(
@@ -229,3 +239,4 @@ class _ProfileState extends State<Profile> {
         ])));
   }
 }
+

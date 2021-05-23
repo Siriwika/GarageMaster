@@ -264,13 +264,7 @@ class _EditServiceState extends State<EditService> {
                       _deleteAllservice(widget.garageModels.gId);
                       _startEdit();
                       print('success');
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyGarge(
-                                    uid: widget.uid,
-                                    name: widget.name,
-                                  )));
+                      
                     },
                   )),
                 ),
@@ -303,6 +297,13 @@ class _EditServiceState extends State<EditService> {
       normalDialog(context, 'ล้มเหลว', 'แก้ไขบริการล้มเหลว ลองใหม่อีกครั้ง',5);
     } else {
       normalDialog(context, 'สำเร็จ', 'แก้ไขบริการเรียบร้อย',5);
+      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyGarge(
+                                    uid: widget.uid,
+                                    name: widget.name,
+                                  )));
     }
   }
 
