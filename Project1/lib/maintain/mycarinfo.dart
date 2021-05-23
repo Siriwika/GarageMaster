@@ -7,13 +7,12 @@ import 'package:intl/intl.dart';
 class Detailcar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp (
-    );
+    return MaterialApp();
   }
 }
 
 class Detail extends StatefulWidget {
-    final CarModel carModels;
+  final CarModel carModels;
   Detail(this.carModels);
 
   @override
@@ -21,8 +20,7 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
-
-    Future<String> getJsonFile(String path) async {
+  Future<String> getJsonFile(String path) async {
     return await rootBundle.loadString(path);
   }
 
@@ -36,14 +34,39 @@ class _DetailState extends State<Detail> {
   String breaking;
   String tires;
   String steering;
+  final date = DateTime.now();
+
+ String timeAgo(DateTime lday,int dayem) {
+ Duration diff = DateTime.now().difference(lday);
+ var tmp = (dayem - (diff.inDays));
+ var d = diff.inDays;
+ if (tmp >= 365)
+  return "ครบกำหนดในอีก ${(tmp / 365).floor()} ${(tmp / 365).floor() == 1 ? "ปี" : "ปี"}";
+ if (tmp > 30)
+  return "ครบกำหนดในอีก ${(tmp / 30).floor()} ${(tmp / 30).floor() == 1 ? "เดือน" : "เดือน"}";
+ if (tmp > 7)
+  return "ครบกำหนดในอีก ${(tmp / 7).floor()} ${(tmp / 7).floor() == 1 ? "สัปดาห์" : "สัปดาห์"}";
+    if (tmp <= -365)
+  return "เลยกำหนด ${(dayem / 365).floor()} ${(tmp / 365).floor() == 1 ? "ปี" : "ปี"}";
+  if (tmp < -30)
+  return "เลยกำหนด ${(dayem / 30).floor()} ${(tmp / 30).floor() == 1 ? "เดือน" : "เดือน"}";
+ if (tmp < -7)
+  return "เลยกำหนด ${(dayem / 7).floor()} ${tmp == 1 ? "สัปดาห์" : "สัปดาห์"}";
+   if (tmp < 0)
+  return "เลยกำหนด ${(dayem - d.floor())} ${tmp == 1 ? "'วัน'" : "วัน"}";
+  return "ครบกำหนดวันนี้";
+  }
+
   @override
   Widget build(BuildContext context) {
+
     screen = MediaQuery.of(context).size.width;
     engine = DateFormat('dd-MM-yyyy').format(widget.carModels.cEngine);
     battery = DateFormat('dd-MM-yyyy').format(widget.carModels.cBattery);
     coolant = DateFormat('dd-MM-yyyy').format(widget.carModels.cCoolant);
     fuel = DateFormat('dd-MM-yyyy').format(widget.carModels.cFuel);
-    aircondition = DateFormat('dd-MM-yyyy').format(widget.carModels.cAirConditioning);
+    aircondition =
+        DateFormat('dd-MM-yyyy').format(widget.carModels.cAirConditioning);
     powertrain = DateFormat('dd-MM-yyyy').format(widget.carModels.cPowerTrain);
     breaking = DateFormat('dd-MM-yyyy').format(widget.carModels.cBraking);
     tires = DateFormat('dd-MM-yyyy').format(widget.carModels.cTires);
@@ -62,14 +85,15 @@ class _DetailState extends State<Detail> {
                   SizedBox(
                     height: screen * 0.02,
                   ),
-                  Image.network(widget.carModels.cImage,
+                  Image.network(
+                    widget.carModels.cImage,
                     height: screen * 0.3,
                     width: screen * 0.5,
                     fit: BoxFit.cover,
                   ),
                   Center(
                     child: Container(
-                        margin: EdgeInsets.fromLTRB(5,5,5,5),
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
                         padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                         alignment: Alignment.center,
                         child: Row(
@@ -85,7 +109,8 @@ class _DetailState extends State<Detail> {
                               ),
                             ),
                             Expanded(
-                              child: Text(widget.carModels.cBrand,
+                              child: Text(
+                                widget.carModels.cBrand,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -148,6 +173,7 @@ class _DetailState extends State<Detail> {
           ),
         )));
   }
+
   Container buildTextFieldEmail() {
     return Container(
       padding: EdgeInsets.all(5),
@@ -177,10 +203,10 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(engine,
+              child: Text(timeAgo(widget.carModels.cEngine,((365/3).floor())),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.green,
+                    color: Colors.red,
                     fontSize: 16,
                     fontWeight: FontWeight.bold),
               ),
@@ -206,10 +232,10 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(battery,
+              child: Text(timeAgo(widget.carModels.cBattery,365*3),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.red,
+                    color: Colors.green,
                     fontSize: 16,
                     fontWeight: FontWeight.bold),
               ),
@@ -235,7 +261,7 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(coolant,
+              child: Text(timeAgo(widget.carModels.cCoolant,365*2),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -264,7 +290,7 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(fuel,
+              child: Text(timeAgo(widget.carModels.cFuel,(365*2)),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -293,7 +319,7 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(aircondition,
+              child: Text(timeAgo(widget.carModels.cAirConditioning,90),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -322,7 +348,7 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(powertrain,
+              child: Text(timeAgo(widget.carModels.cPowerTrain,(365*2)),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -333,7 +359,8 @@ class _DetailState extends State<Detail> {
           ],
         ));
   }
-    Container buildTextFieldbreking() {
+
+  Container buildTextFieldbreking() {
     return Container(
         margin: EdgeInsets.all(5),
         alignment: Alignment.center,
@@ -350,7 +377,7 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(breaking,
+              child: Text(timeAgo(widget.carModels.cBraking,(365*4)),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -361,7 +388,8 @@ class _DetailState extends State<Detail> {
           ],
         ));
   }
-    Container buildTextFieldTires() {
+
+  Container buildTextFieldTires() {
     return Container(
         margin: EdgeInsets.all(5),
         alignment: Alignment.center,
@@ -378,7 +406,7 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(tires,
+              child: Text(timeAgo(widget.carModels.cTires,(365*2)),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -389,7 +417,8 @@ class _DetailState extends State<Detail> {
           ],
         ));
   }
-      Container buildTextFieldSteering() {
+
+  Container buildTextFieldSteering() {
     return Container(
         margin: EdgeInsets.all(5),
         alignment: Alignment.center,
@@ -406,7 +435,7 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(steering,
+              child: Text(timeAgo(widget.carModels.cPowerTrain,(365*2)),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
