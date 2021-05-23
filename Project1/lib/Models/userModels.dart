@@ -7,7 +7,7 @@ String userModelTojson(UserModel data) => json.encode(data.toJson());
 class UserModel {
   final String email;
   final String name;
-  final String uid;
+  final int uid;
 
   UserModel({this.email, this.name, this.uid});
 
