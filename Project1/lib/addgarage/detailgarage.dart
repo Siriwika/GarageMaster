@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project1/Models/TestModel.dart';
@@ -74,9 +76,11 @@ class _Garage2State extends State<Garage2> {
   String distkm;
   int gid;
   String service;
+  String gdate;
 
   @override
   Widget build(BuildContext context) {
+    gdate = widget.garageModels.gDate;
     charge = widget.garageModels.gCharge;
     screen = MediaQuery.of(context).size.width;
     call = widget.garageModels.gPhone;
@@ -102,7 +106,7 @@ class _Garage2State extends State<Garage2> {
               height: screen * 0.55,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                     image: NetworkImage(widget.garageModels.gImage)),
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
@@ -129,7 +133,7 @@ class _Garage2State extends State<Garage2> {
                       style: TextStyle(color: Colors.black, fontSize: 18),
                     ),
                     Text(
-                      'เวลาเปิดให้บริการ',
+                      'เวลาเปิดให้บริการ $gdate',
                       style: TextStyle(color: Colors.black, fontSize: 18),
                     ),
                     Text(
@@ -199,6 +203,19 @@ class _Garage2State extends State<Garage2> {
             SizedBox(
               height: screen * 0.02,
             ),
+            Container(
+              padding: EdgeInsets.only(left: 10),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "บริการ",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              color: Color.fromRGBO(252, 207, 153, 1),
+            ),
             Expanded(
               child: FutureBuilder<List<ServiceModel>>(
                   future: futureservice,
@@ -212,21 +229,25 @@ class _Garage2State extends State<Garage2> {
                         itemCount: serviceData.data.length,
                         itemBuilder: (context, index) {
                           String service = values[index].sname;
-                          return ListTile(
-                            tileColor: Color.fromRGBO(252, 207, 153, 1),
-                            title: Text(
-                              service,
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
+                          return Column(
+                            children: [
+                              ListTile(
+                                tileColor: Color.fromRGBO(252, 207, 153, 1),
+                                title: Text(
+                                  service,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w100,
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           );
                         },
                       );
                     } else {
-                      return CircularProgressIndicator();
+                      return Center(child: CircularProgressIndicator());
                     }
                   }),
             ),
@@ -286,14 +307,34 @@ class _Garage2State extends State<Garage2> {
                           color: Colors.white,
                         )),
                     onPressed: () {
-                      _deletegarage(gid);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyGarge(
-                                    uid: widget.uid,
-                                    name: widget.name,
-                                  )));
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("แน่ใจนะ?",
+                                  style: TextStyle(color: Colors.red)),
+                              content: Text("ข้อมูลอู่ทั้งหมดจะถูกลบ"),
+                              actions: [
+                                FlatButton(
+                                    onPressed: () {
+                                      _deletegarage(gid);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => MyGarge(
+                                                    uid: widget.uid,
+                                                    name: widget.name,
+                                                  )));
+                                    },
+                                    child: Text("ยืนยัน")),
+                                FlatButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("ยกเลิก"))
+                              ],
+                            );
+                          });
                     }),
               ],
             ),

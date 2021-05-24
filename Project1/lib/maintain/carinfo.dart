@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
+import 'package:project1/main.dart';
 import 'package:project1/tab/profile.dart';
 import 'package:project1/utility/dialog.dart';
 
@@ -105,49 +106,6 @@ class _CarInfo1State extends State<CarInfo1> {
       return null;
     }
   }
-
-  // Future<Carinfo> insertCar(
-  //   String cBrand,
-  //   File cImage,
-  //   DateTime cEngine,
-  //   DateTime cBattery,
-  //   DateTime cCoolant,
-  //   DateTime cFuel,
-  //   DateTime cAirConditioning,
-  //   DateTime cPowerTrain,
-  //   DateTime cBraking,
-  //   DateTime cTires,
-  //   DateTime cSteering,
-  // ) async {
-  // var response =
-  //     await http.post("http://139.59.229.66:5002/api/CarInfo/AddCarInfo",
-  //         body: {
-  //           "C_Brand": cBrand,
-  //           "FileImage": cImage,
-  //           "C_Engine": cEngine,
-  //           "C_Battery": cBattery,
-  //           "C_Coolant": cCoolant,
-  //           "C_Fuel": cFuel,
-  //           "C_AirConditioning": cAirConditioning,
-  //           "C_PowerTrain": cPowerTrain,
-  //           "C_Braking": cBraking,
-  //           "C_Tires": cTires,
-  //           "C_Steering": cSteering,
-  //           "UId": 5
-  //         },
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //           "Accept": "*/*",
-  //           "Accept-Encoding": "gzip, deflate, br"
-  //         },
-  //         encoding: Encoding.getByName("utf-8"));
-  //   if (response.statusCode == 201) {
-  //     final String responseString = response.;
-  //     return carinfoFromJson2(responseString);
-  //   } else {
-  //     return null;
-  //   }
-  // }
 
   _selectDate1(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -589,14 +547,20 @@ class _CarInfo1State extends State<CarInfo1> {
                         child: RaisedButton(
                           onPressed: () {
                             cbrand = cbrandcontroller.text;
-
-                            _startUpload();
-                            print('success');
-                            print(date1);
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => Profile()));
+                            if ((cbrand?.isEmpty) && (file == null)) {
+                              normalDialog(context, "คุณยังกรอกข้อมูลไม่ครบ",
+                                  "กรุณาเพิ่มรูปภาพรถ และ ยี่ห้อรถ", 0);
+                            } else if (cbrand?.isEmpty) {
+                              normalDialog(context, "คุณยังไม่ได้กรอกยี่ย้อรถ",
+                                  "กรุณากรอกยี่ห้อรถ", 0);
+                            } else if (file == null) {
+                              normalDialog(context, "คุณยังเพิ่มรูปภาพรถ",
+                                  "กรุณาเพิ่มรูปภาพรถ", 0);
+                            } else {
+                              _startUpload();
+                              print('success');
+                              print(date1);
+                            }
                           },
                           color: Color.fromRGBO(37, 134, 41, 1),
                           shape: RoundedRectangleBorder(

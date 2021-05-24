@@ -179,11 +179,11 @@ class _MyGarage1State extends State<MyGarage1> {
       onPressed: () {
         if ((gName?.isEmpty ?? true) && (file == null)) {
           normalDialog(context, "คุณยังไม่ได้กรอกข้อมูล",
-              "กรุณาเพิ่มรูปภาพอู่ และ ชื่อร้าน",5);
+              "กรุณาเพิ่มรูปภาพอู่ และ ชื่อร้าน",0);
         } else if (gName?.isEmpty ?? true) {
-          normalDialog(context, "คุณยังกรอกชื่อร้าน", "กรุณากรอกชื่อร้าน",5);
+          normalDialog(context, "คุณยังกรอกชื่อร้าน", "กรุณากรอกชื่อร้าน",0);
         } else if (file == null) {
-          normalDialog(context, "คุณยังเพิ่มรูปภาพอู่", "กรุณาเพิ่มรูปภาพอู่",5);
+          normalDialog(context, "คุณยังเพิ่มรูปภาพอู่", "กรุณาเพิ่มรูปภาพอู่",0);
         } else {
           String gDes = gDescriptioncontroller.text;
           String gN = gNAMEcontroller.text;

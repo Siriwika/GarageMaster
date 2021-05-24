@@ -320,6 +320,7 @@ class _MyGaragePage2 extends State<MyGarage2> {
                       onPressed: () {
                         print(lat.toDouble());
                         print(long);
+
                         if ((gphone?.isEmpty ?? true) ||
                             (_gDate?.isEmpty ?? true) ||
                             (gOpenT == null) ||
@@ -327,10 +328,13 @@ class _MyGaragePage2 extends State<MyGarage2> {
                             (_gCharge == null) ||
                             (_gServiceType?.isEmpty ?? true)) {
                           normalDialog(context, "คุณยังไม่ได้กรอกข้อมูล",
-                              "กรุณากรอกข้อมูลให้ครบ",5);
+                              "กรุณากรอกข้อมูลให้ครบ", 0);
                         } else if (gphone.length != 10) {
                           normalDialog(context, "เบอร์โทรไม่ครบ 10 หลัก",
-                              "กรุณากรอกเบอร์โทรให้ครบ 10 หลัก",5);
+                              "กรุณากรอกเบอร์โทรให้ครบ 10 หลัก", 0);
+                        } else if (gOpenT.hour.toInt() > gCloseT.hour.toInt()) {
+                          normalDialog(context, "เวลาเปิดร้านคุณไม่ถูกต้อง",
+                              "กรุณากรอกเวลาเปิดปิดอู่ของคุณให้ถูกต้อง", 0);
                         } else {
                           final localizations =
                               MaterialLocalizations.of(context);

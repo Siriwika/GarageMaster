@@ -7,13 +7,12 @@ import 'package:intl/intl.dart';
 class Detailcar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp (
-    );
+    return MaterialApp();
   }
 }
 
 class Detail extends StatefulWidget {
-    final CarModel carModels;
+  final CarModel carModels;
   Detail(this.carModels);
 
   @override
@@ -21,8 +20,7 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
-
-    Future<String> getJsonFile(String path) async {
+  Future<String> getJsonFile(String path) async {
     return await rootBundle.loadString(path);
   }
 
@@ -43,7 +41,8 @@ class _DetailState extends State<Detail> {
     battery = DateFormat('dd-MM-yyyy').format(widget.carModels.cBattery);
     coolant = DateFormat('dd-MM-yyyy').format(widget.carModels.cCoolant);
     fuel = DateFormat('dd-MM-yyyy').format(widget.carModels.cFuel);
-    aircondition = DateFormat('dd-MM-yyyy').format(widget.carModels.cAirConditioning);
+    aircondition =
+        DateFormat('dd-MM-yyyy').format(widget.carModels.cAirConditioning);
     powertrain = DateFormat('dd-MM-yyyy').format(widget.carModels.cPowerTrain);
     breaking = DateFormat('dd-MM-yyyy').format(widget.carModels.cBraking);
     tires = DateFormat('dd-MM-yyyy').format(widget.carModels.cTires);
@@ -56,20 +55,20 @@ class _DetailState extends State<Detail> {
             child: Expanded(
           child: SingleChildScrollView(
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: screen * 0.02,
+                    height: screen * 0.15,
                   ),
-                  Image.network(widget.carModels.cImage,
+                  Image.network(
+                    widget.carModels.cImage,
                     height: screen * 0.3,
                     width: screen * 0.5,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                   Center(
                     child: Container(
-                        margin: EdgeInsets.fromLTRB(5,5,5,5),
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
                         padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                         alignment: Alignment.center,
                         child: Row(
@@ -85,7 +84,8 @@ class _DetailState extends State<Detail> {
                               ),
                             ),
                             Expanded(
-                              child: Text(widget.carModels.cBrand,
+                              child: Text(
+                                widget.carModels.cBrand,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -148,6 +148,7 @@ class _DetailState extends State<Detail> {
           ),
         )));
   }
+
   Container buildTextFieldEmail() {
     return Container(
       padding: EdgeInsets.all(5),
@@ -177,7 +178,8 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(engine,
+              child: Text(
+                engine,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -206,7 +208,8 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(battery,
+              child: Text(
+                battery,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.red,
@@ -235,7 +238,8 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(coolant,
+              child: Text(
+                coolant,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -264,7 +268,8 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(fuel,
+              child: Text(
+                fuel,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -293,7 +298,8 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(aircondition,
+              child: Text(
+                aircondition,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -322,7 +328,8 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(powertrain,
+              child: Text(
+                powertrain,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -333,7 +340,8 @@ class _DetailState extends State<Detail> {
           ],
         ));
   }
-    Container buildTextFieldbreking() {
+
+  Container buildTextFieldbreking() {
     return Container(
         margin: EdgeInsets.all(5),
         alignment: Alignment.center,
@@ -350,7 +358,8 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(breaking,
+              child: Text(
+                breaking,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -361,7 +370,8 @@ class _DetailState extends State<Detail> {
           ],
         ));
   }
-    Container buildTextFieldTires() {
+
+  Container buildTextFieldTires() {
     return Container(
         margin: EdgeInsets.all(5),
         alignment: Alignment.center,
@@ -378,7 +388,8 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(tires,
+              child: Text(
+                tires,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
@@ -389,7 +400,8 @@ class _DetailState extends State<Detail> {
           ],
         ));
   }
-      Container buildTextFieldSteering() {
+
+  Container buildTextFieldSteering() {
     return Container(
         margin: EdgeInsets.all(5),
         alignment: Alignment.center,
@@ -406,7 +418,8 @@ class _DetailState extends State<Detail> {
               ),
             ),
             Expanded(
-              child: Text(steering,
+              child: Text(
+                steering,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.green,
